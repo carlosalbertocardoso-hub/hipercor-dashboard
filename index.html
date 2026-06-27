@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hipercor Niña 7-8 — Dashboard</title>
+  <title>Hipercor Moda Infantil — Dashboard</title>
   <style>
     /* ===================================================
      * DESIGN TOKENS
@@ -487,7 +487,7 @@
   </div>
   <div class="stat-card">
     <div class="stat-card__num stat-card__num--success" id="withTalla78" aria-live="polite">0</div>
-    <div class="stat-card__label">Con talla 7-8 disponible</div>
+    <div class="stat-card__label">Con talla disponible</div>
   </div>
   <div class="stat-card">
     <div class="stat-card__num" id="trackingCount" aria-live="polite">0</div>
@@ -556,69 +556,100 @@
    *   category   {string}           — product category
    *   price      {string}           — display price (may include "~" for approx.)
    *   brand      {string}           — brand label
-   *   hasSize78  {boolean|null}     — true=confirmed, false=not available, null=unverified
-   *   stock      {'available'|'soldOut'|'pending'}
+   *   gender     {'girl'|'boy'}       — gender
+   *   sizes      {string[]}           — size labels e.g. ['7-8'], ['6','9-10']
+   *   stock      {'available'|'soldOut'}
    *   url        {string}           — canonical Hipercor URL
    *   imageUrl   {string|null}      — CDN image URL
    * =================================================== */
   const PRODUCTS = [
     // ─── Pantalones ───────────────────────────────────────────────────────────
-    { name: 'Peto de rayas family',     category: 'Pantalones', price: '13,30 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56208017-peto-de-rayas-family/',          imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/14/00103685301867____5__967x1200.jpg' },
-    { name: 'Peto Vichy Seersucker',    category: 'Pantalones', price: '13,30 €', brand: 'Unit', hasSize78: true, stock: 'soldOut', url: 'https://www.hipercor.es/moda-y-accesorios/A56207985-peto-vichy-seersucker/',         imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/14/00103685301859____6__967x1200.jpg' },
-    { name: 'Peto niña largo denim',    category: 'Pantalones', price: '13,30 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56114831-peto-nina-largo-denim/',         imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/06/00103685301735____2__967x1200.jpg' },
-    { name: 'Pantalón niña carpintero', category: 'Pantalones', price: '11,90 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56130245-pantalon-nina-carpintero/',     imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/17/00103685301800____3__967x1200.jpg' },
-    { name: 'Peto niña largo de lino',  category: 'Pantalones', price: '13,30 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56130395-peto-nina-largo-de-lino/',     imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/11/00103685301818____1__967x1200.jpg' },
-    { name: 'Short niña lino estampado',category: 'Pantalones', price: '14 €',    brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56255691-short-nina-de-lino-estampado/', imageUrl: 'https://dam.elcorteingles.es/producto/www-001003685103818-00.jpg' },
+    { name: 'Peto de rayas family',     category: 'Pantalones', price: '13,30 €', brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56208017-peto-de-rayas-family/',          imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/14/00103685301867____5__967x1200.jpg' },
+    { name: 'Peto Vichy Seersucker',    category: 'Pantalones', price: '13,30 €', brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'soldOut', url: 'https://www.hipercor.es/moda-y-accesorios/A56207985-peto-vichy-seersucker/',         imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/14/00103685301859____6__967x1200.jpg' },
+    { name: 'Peto niña largo denim',    category: 'Pantalones', price: '13,30 €', brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56114831-peto-nina-largo-denim/',         imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/06/00103685301735____2__967x1200.jpg' },
+    { name: 'Pantalón niña carpintero', category: 'Pantalones', price: '11,90 €', brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56130245-pantalon-nina-carpintero/',     imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/17/00103685301800____3__967x1200.jpg' },
+    { name: 'Peto niña largo de lino',  category: 'Pantalones', price: '13,30 €', brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56130395-peto-nina-largo-de-lino/',     imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/11/00103685301818____1__967x1200.jpg' },
+    { name: 'Short niña lino estampado',category: 'Pantalones', price: '14 €',    brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56255691-short-nina-de-lino-estampado/', imageUrl: 'https://dam.elcorteingles.es/producto/www-001003685103818-00.jpg' },
 
     // ─── Vestidos ─────────────────────────────────────────────────────────────
-    { name: 'Vestido lino bordados (Carmín)',    category: 'Vestidos', price: '16,80 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A55982328-vestido-nina-de-lino-con-bordados-en-el-cuello/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202510/20/00103688103476____6__967x1200.jpg' },
-    { name: 'Vestido lino bordados (Gris claro)',category: 'Vestidos', price: '16,80 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A55982295-vestido-nina-de-lino-con-bordados-en-el-cuello/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202510/17/00103688103468____1__967x1200.jpg' },
-    { name: 'Vestido doble gasa (Azul pálido)', category: 'Vestidos', price: '16,80 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56012569-vestido-nina-de-doble-gasa-estampado/',             imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/06/00103688103526____2__967x1200.jpg' },
-    { name: 'Vestido doble gasa (Verde oscuro)', category: 'Vestidos', price: '16,80 €', brand: 'Unit', hasSize78: true, stock: 'soldOut',   url: 'https://www.hipercor.es/moda-y-accesorios/A56012594-vestido-nina-de-doble-gasa-estampado/',             imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/06/00103688103534____2__967x1200.jpg' },
-    { name: 'Vestido gasa vichy (Oliva)',        category: 'Vestidos', price: '16,80 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56012611-vestido-nina-de-gasa-de-cuadros-vichy/',             imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/06/00103688103542____2__967x1200.jpg' },
-    { name: 'Vestido schiffli (Blanco)',         category: 'Vestidos', price: '16,80 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56369559-vestido-nina-schiffli/',                             imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/09/00103688103732____2__967x1200.jpg' },
-    { name: 'Vestido con smock (Jabón)',         category: 'Vestidos', price: '16,80 €', brand: 'Unit', hasSize78: true, stock: 'soldOut',   url: 'https://www.hipercor.es/moda-y-accesorios/A56255718-vestido-nina-con-smock/',                            imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/14/00103688103690____4__967x1200.jpg' },
-    { name: 'Vestido camisero rayas (Rosa)',     category: 'Vestidos', price: '16,80 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56235352-vestido-nina-camisero-rayas/',                       imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/13/00103688103682____5__967x1200.jpg' },
-    { name: 'Vestido rayas (Fucsia)',            category: 'Vestidos', price: '16,80 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56324610-vestido-nina-de-rayas/',                             imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202601/27/00103688103716____1__967x1200.jpg' },
+    { name: 'Vestido lino bordados (Carmín)',    category: 'Vestidos', price: '16,80 €', brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A55982328-vestido-nina-de-lino-con-bordados-en-el-cuello/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202510/20/00103688103476____6__967x1200.jpg' },
+    { name: 'Vestido lino bordados (Gris claro)',category: 'Vestidos', price: '16,80 €', brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A55982295-vestido-nina-de-lino-con-bordados-en-el-cuello/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202510/17/00103688103468____1__967x1200.jpg' },
+    { name: 'Vestido doble gasa (Azul pálido)', category: 'Vestidos', price: '16,80 €', brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56012569-vestido-nina-de-doble-gasa-estampado/',             imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/06/00103688103526____2__967x1200.jpg' },
+    { name: 'Vestido doble gasa (Verde oscuro)', category: 'Vestidos', price: '16,80 €', brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'soldOut',   url: 'https://www.hipercor.es/moda-y-accesorios/A56012594-vestido-nina-de-doble-gasa-estampado/',             imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/06/00103688103534____2__967x1200.jpg' },
+    { name: 'Vestido gasa vichy (Oliva)',        category: 'Vestidos', price: '16,80 €', brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56012611-vestido-nina-de-gasa-de-cuadros-vichy/',             imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/06/00103688103542____2__967x1200.jpg' },
+    { name: 'Vestido schiffli (Blanco)',         category: 'Vestidos', price: '16,80 €', brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56369559-vestido-nina-schiffli/',                             imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/09/00103688103732____2__967x1200.jpg' },
+    { name: 'Vestido con smock (Jabón)',         category: 'Vestidos', price: '16,80 €', brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'soldOut',   url: 'https://www.hipercor.es/moda-y-accesorios/A56255718-vestido-nina-con-smock/',                            imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/14/00103688103690____4__967x1200.jpg' },
+    { name: 'Vestido camisero rayas (Rosa)',     category: 'Vestidos', price: '16,80 €', brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56235352-vestido-nina-camisero-rayas/',                       imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/13/00103688103682____5__967x1200.jpg' },
+    { name: 'Vestido rayas (Fucsia)',            category: 'Vestidos', price: '16,80 €', brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56324610-vestido-nina-de-rayas/',                             imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202601/27/00103688103716____1__967x1200.jpg' },
 
     // ─── Camisetas ────────────────────────────────────────────────────────────
-    { name: 'Camiseta cuello crochét',           category: 'Camisetas', price: '~15 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56215017-camiseta-nina-con-cuello-de-crochet/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/13/00103684209624____3__967x1200.jpg' },
-    { name: 'Camiseta cuello doble (Blanco)',     category: 'Camisetas', price: '~15 €', brand: 'Unit', hasSize78: true, stock: 'soldOut', url: 'https://www.hipercor.es/moda-y-accesorios/A56215091-camiseta-nina-con-cuello-doble/',         imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/13/00103684209657____1__967x1200.jpg' },
-    { name: 'Camiseta volante gasa (Rosa)',       category: 'Camisetas', price: '8 €',   brand: 'Unit', hasSize78: true, stock: 'soldOut',   url: 'https://www.hipercor.es/moda-y-accesorios/A56191468-camiseta-nina-con-volante-de-gasa/',   imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202601/27/00103684209558____2__967x1200.jpg' },
-    { name: 'Camiseta punto de cruz (Verde)',     category: 'Camisetas', price: '~15 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56197651-camiseta-nina-punto-de-cruz/',          imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/30/00103684209574____3__967x1200.jpg' },
-    { name: 'Camiseta cuello crochét (Amarillo)',category: 'Camisetas', price: '~15 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56215074-camiseta-nina-con-cuello-de-crochet/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/15/00103684209640____2__967x1200.jpg' },
+    { name: 'Camiseta cuello crochét',           category: 'Camisetas', price: '~15 €', brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56215017-camiseta-nina-con-cuello-de-crochet/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/13/00103684209624____3__967x1200.jpg' },
+    { name: 'Camiseta cuello doble (Blanco)',     category: 'Camisetas', price: '~15 €', brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'soldOut', url: 'https://www.hipercor.es/moda-y-accesorios/A56215091-camiseta-nina-con-cuello-doble/',         imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/13/00103684209657____1__967x1200.jpg' },
+    { name: 'Camiseta volante gasa (Rosa)',       category: 'Camisetas', price: '8 €',   brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'soldOut',   url: 'https://www.hipercor.es/moda-y-accesorios/A56191468-camiseta-nina-con-volante-de-gasa/',   imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202601/27/00103684209558____2__967x1200.jpg' },
+    { name: 'Camiseta punto de cruz (Verde)',     category: 'Camisetas', price: '~15 €', brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56197651-camiseta-nina-punto-de-cruz/',          imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/30/00103684209574____3__967x1200.jpg' },
+    { name: 'Camiseta cuello crochét (Amarillo)',category: 'Camisetas', price: '~15 €', brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56215074-camiseta-nina-con-cuello-de-crochet/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/15/00103684209640____2__967x1200.jpg' },
 
     // ─── Blusas ───────────────────────────────────────────────────────────────
-    { name: 'Blusa niña cuello flor',      category: 'Blusas', price: '15 €', brand: 'Unit', hasSize78: true, stock: 'soldOut',   url: 'https://www.hipercor.es/moda-y-accesorios/A56255604-blusa-nina-con-cuello-flor/',    imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/15/00103683002764____1__967x1200.jpg' },
-    { name: 'Blusa niña abierta lino set', category: 'Blusas', price: '15 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56269951-blusa-nina-abierta-de-lino-set/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/30/00103683002806____3__967x1200.jpg' },
+    { name: 'Blusa niña cuello flor',      category: 'Blusas', price: '15 €', brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'soldOut',   url: 'https://www.hipercor.es/moda-y-accesorios/A56255604-blusa-nina-con-cuello-flor/',    imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/15/00103683002764____1__967x1200.jpg' },
+    { name: 'Blusa niña abierta lino set', category: 'Blusas', price: '15 €', brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56269951-blusa-nina-abierta-de-lino-set/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/30/00103683002806____3__967x1200.jpg' },
 
     // ─── Faldas ───────────────────────────────────────────────────────────────
-    { name: 'Falda niña con bordados',    category: 'Faldas', price: '14 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56369589-falda-nina-con-bordados/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/09/00103687101414____3__967x1200.jpg' },
-    { name: 'Falda niña vaquera (Crudo)', category: 'Faldas', price: '14 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56131667-falda-nina-vaquera/',       imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/06/00103687101406____3__967x1200.jpg' },
-    { name: 'Falda niña colegial (Azul)', category: 'Faldas', price: '15 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A50403255-falda-colegial/',           imageUrl: 'https://dam.elcorteingles.es/producto/www-001003645160379-00.jpg' },
+    { name: 'Falda niña con bordados',    category: 'Faldas', price: '14 €', brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56369589-falda-nina-con-bordados/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/09/00103687101414____3__967x1200.jpg' },
+    { name: 'Falda niña vaquera (Crudo)', category: 'Faldas', price: '14 €', brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56131667-falda-nina-vaquera/',       imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/06/00103687101406____3__967x1200.jpg' },
+    { name: 'Falda niña colegial (Azul)', category: 'Faldas', price: '15 €', brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A50403255-falda-colegial/',           imageUrl: 'https://dam.elcorteingles.es/producto/www-001003645160379-00.jpg' },
 
     // ─── Pijamas ──────────────────────────────────────────────────────────────
-    { name: 'Pijama tirantes (Blanco roto)',   category: 'Pijamas', price: '~15 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56395890-pijama-de-nina-con-tirantes/',            imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202601/27/00198481004368____3__967x1200.jpg' },
-    { name: 'Pijama tirantes (Azul claro)',    category: 'Pijamas', price: '~15 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56395902-pijama-de-nina-con-tirantes/',            imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202601/27/00198481004376____2__967x1200.jpg' },
-    { name: 'Pijama popelin corto (Blanco)',   category: 'Pijamas', price: '~15 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56131783-pijama-de-nina-popelin-corto/',           imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/18/00198481004327____2__967x1200.jpg' },
-    { name: 'Pijama gasa corto estampado',     category: 'Pijamas', price: '~15 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56024427-pijama-de-nina-de-gasa-corto-estampado/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/09/00198481004277____3__967x1200.jpg' },
+    { name: 'Pijama tirantes (Blanco roto)',   category: 'Pijamas', price: '~15 €', brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56395890-pijama-de-nina-con-tirantes/',            imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202601/27/00198481004368____3__967x1200.jpg' },
+    { name: 'Pijama tirantes (Azul claro)',    category: 'Pijamas', price: '~15 €', brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56395902-pijama-de-nina-con-tirantes/',            imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202601/27/00198481004376____2__967x1200.jpg' },
+    { name: 'Pijama popelin corto (Blanco)',   category: 'Pijamas', price: '~15 €', brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56131783-pijama-de-nina-popelin-corto/',           imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/18/00198481004327____2__967x1200.jpg' },
+    { name: 'Pijama gasa corto estampado',     category: 'Pijamas', price: '~15 €', brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56024427-pijama-de-nina-de-gasa-corto-estampado/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/09/00198481004277____3__967x1200.jpg' },
 
     // ─── Baño ─────────────────────────────────────────────────────────────────
-    { name: 'Bikini volante flores',       category: 'Baño', price: '15 €', brand: 'Unit', hasSize78: true, stock: 'soldOut',   url: 'https://www.hipercor.es/moda-y-accesorios/A56322579-bikini-nina-volante-flores/',  imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/19/00103689206450____2__967x1200.jpg' },
-    { name: 'Bañador volante indio',       category: 'Baño', price: '15 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56506050-banador-nina-volante-indio/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202603/01/00103684503077____1__967x1200.jpg' },
-    { name: 'Bañador lazos flor (Fucsia)', category: 'Baño', price: '15 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56319884-banador-nina-lazos-flor/',   imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/10/00103689107195____1__967x1200.jpg' },
-    { name: 'Kaftan bordado (Fucsia)',     category: 'Baño', price: '17 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56796926-kaftan-de-nina-bordado/',     imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202601/09/00103689301541____1__967x1200.jpg' },
+    { name: 'Bikini volante flores',       category: 'Baño', price: '15 €', brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'soldOut',   url: 'https://www.hipercor.es/moda-y-accesorios/A56322579-bikini-nina-volante-flores/',  imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/19/00103689206450____2__967x1200.jpg' },
+    { name: 'Bañador volante indio',       category: 'Baño', price: '15 €', brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56506050-banador-nina-volante-indio/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202603/01/00103684503077____1__967x1200.jpg' },
+    { name: 'Bañador lazos flor (Fucsia)', category: 'Baño', price: '15 €', brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56319884-banador-nina-lazos-flor/',   imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/10/00103689107195____1__967x1200.jpg' },
+    { name: 'Kaftan bordado (Fucsia)',     category: 'Baño', price: '17 €', brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56796926-kaftan-de-nina-bordado/',     imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202601/09/00103689301541____1__967x1200.jpg' },
 
     // ─── Sudaderas ────────────────────────────────────────────────────────────
-    { name: 'Sudadera cuello caja (Salmón)',   category: 'Sudaderas', price: '7 €',    brand: 'Unit', hasSize78: true, stock: 'soldOut',   url: 'https://www.hipercor.es/moda-y-accesorios/A55982048-sudadera-nina-cuello-caja/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/02/00103682001551____3__967x1200.jpg' },
-    { name: 'Sudadera cuello caja (Malva)',    category: 'Sudaderas', price: '~15 €',   brand: 'Unit', hasSize78: true, stock: 'soldOut',   url: 'https://www.hipercor.es/moda-y-accesorios/A55982098-sudadera-nina-cuello-caja/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/10/00103682001569____2__967x1200.jpg' },
-    { name: 'Sudadera rayas (Verde Pato)',     category: 'Sudaderas', price: '~15 €',   brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A55982173-sudadera-nina-rayas/',       imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/02/00103682001585____3__967x1200.jpg' },
+    { name: 'Sudadera cuello caja (Salmón)',   category: 'Sudaderas', price: '7 €',    brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'soldOut',   url: 'https://www.hipercor.es/moda-y-accesorios/A55982048-sudadera-nina-cuello-caja/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/02/00103682001551____3__967x1200.jpg' },
+    { name: 'Sudadera cuello caja (Malva)',    category: 'Sudaderas', price: '~15 €',   brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'soldOut',   url: 'https://www.hipercor.es/moda-y-accesorios/A55982098-sudadera-nina-cuello-caja/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/10/00103682001569____2__967x1200.jpg' },
+    { name: 'Sudadera rayas (Verde Pato)',     category: 'Sudaderas', price: '~15 €',   brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A55982173-sudadera-nina-rayas/',       imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/02/00103682001585____3__967x1200.jpg' },
 
     // ─── Chaquetas ────────────────────────────────────────────────────────────
-    { name: 'Chaqueta cuello volante (Crudo)', category: 'Chaquetas', price: '~15 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56110049-chaqueta-nina-cuello-volante/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/02/00103681000547____1__967x1200.jpg' },
-    { name: 'Chaqueta cuello blusa (Azul)',    category: 'Chaquetas', price: '~15 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A57741083-chaqueta-nina-cuello-blusa/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202604/06/00103661101695____2__967x1200.jpg' },
-    { name: 'Chaleco abertura (Crudo)',        category: 'Chaquetas', price: '~15 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A57547555-chaleco-nina-abertura/',      imageUrl: 'https://dam.elcorteingles.es/producto/www-001003661002638-00.jpg' },
-  ];
+    { name: 'Chaqueta cuello volante (Crudo)', category: 'Chaquetas', price: '~15 €', brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56110049-chaqueta-nina-cuello-volante/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/02/00103681000547____1__967x1200.jpg' },
+    { name: 'Chaqueta cuello blusa (Azul)',    category: 'Chaquetas', price: '~15 €', brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A57741083-chaqueta-nina-cuello-blusa/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202604/06/00103661101695____2__967x1200.jpg' },
+    { name: 'Chaleco abertura (Crudo)',        category: 'Chaquetas', price: '~15 €', brand: 'Unit', gender: 'girl', sizes: ['7-8'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A57547555-chaleco-nina-abertura/',      imageUrl: 'https://dam.elcorteingles.es/producto/www-001003661002638-00.jpg' },
+
+        // ─── Niño: Camisetas ─────────────────────────────────────────────────────
+        { name: 'Camiseta lisa manga corta (Blanco)', category: 'Camisetas niño', price: '5 €',    brand: 'Unit', gender: 'boy', sizes: ['6', '9-10'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A55909580-camiseta-de-nino-lisa-manga-corta/',    imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/17/001054184306410____2__967x1200.jpg' },
+        { name: 'Camiseta lisa manga corta (Azul marino)', category: 'Camisetas niño', price: '5 €', brand: 'Unit', gender: 'boy', sizes: ['6', '9-10'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A55909630-camiseta-de-nino-lisa-manga-corta/',    imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/14/00154184306428____2__967x1200.jpg' },
+        { name: 'Camiseta estampada manga corta (Azul)', category: 'Camisetas niño', price: '6 €',  brand: 'Unit', gender: 'boy', sizes: ['6', '9-10'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A55909660-camiseta-de-nino-estampada-manga-corta/',   imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/02/00154184306436____3__967x1200.jpg' },
+        { name: 'Camiseta estampada manga larga (Morado)', category: 'Camisetas niño', price: '4,20 €', brand: 'Unit', gender: 'boy', sizes: ['6', '9-10'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A55910044-camiseta-de-nino-estampada-manga-larga/',   imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/11/00154184200704____2__967x1200.jpg' },
+        { name: 'Camiseta estampada manga larga (Blanco)', category: 'Camisetas niño', price: '4,20 €', brand: 'Unit', gender: 'boy', sizes: ['6'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A55909920-camiseta-de-nino-estampada-manga-larga/',   imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/17/00154184200688____2__967x1200.jpg' },
+        // ─── Niño: Sudaderas ────────────────────────────────────────────────────
+        { name: 'Sudadera cuello polo rayas (Morado)', category: 'Sudaderas niño', price: '9,80 €', brand: 'Unit', gender: 'boy', sizes: ['6', '9-10'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56052896-sudadera-de-nino-cuello-polo-rayas/',    imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/17/00154182101813____3__967x1200.jpg' },
+        { name: 'Sudadera capucha estampada (Verde Pato)', category: 'Sudaderas niño', price: '9,80 €', brand: 'Unit', gender: 'boy', sizes: ['6', '9-10'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A55865263-sudadera-de-nino-estampada-con-capucha/',  imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/03/00154182101722____3__967x1200.jpg' },
+        // ─── Niño: Pantalones ───────────────────────────────────────────────────
+        { name: 'Pantalón chino (Verde)',             category: 'Pantalones niño', price: '11,20 €',brand: 'Unit', gender: 'boy', sizes: ['9-10'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A55520711-pantalon-de-nino-chino/',               imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/06/00154185701072____1__967x1200.jpg' },
+        { name: 'Pantalón chino (Azul marino)',       category: 'Pantalones niño', price: '11,20 €',brand: 'Unit', gender: 'boy', sizes: ['9-10'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A55520706-pantalon-de-nino-chino/',               imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/02/00154185701064____2__967x1200.jpg' },
+        { name: 'Pantalón denim 5 bolsillos (Crudo)', category: 'Pantalones niño', price: '10,50 €',brand: 'Unit', gender: 'boy', sizes: ['6', '9-10'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56054673-pantalon-de-nino-denim-color-5-bolsillos/',imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/14/00154185601009____2__967x1200.jpg' },
+        { name: 'Pantalón denim 5 bolsillos (Beige)', category: 'Pantalones niño', price: '10,50 €',brand: 'Unit', gender: 'boy', sizes: ['6'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56054839-pantalon-de-nino-denim-color-5-bolsillos/',imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/14/00154185601033____3__967x1200.jpg' },
+        { name: 'Pantalón felpa (Berenjena)',         category: 'Pantalones niño', price: '5,60 €', brand: 'Unit', gender: 'boy', sizes: ['6', '9-10'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A55864742-pantalon-de-nino-felpa/',              imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/06/00154186501240____1__967x1200.jpg' },
+        // ─── Niño: Camisas ──────────────────────────────────────────────────────
+        { name: 'Camisa algodón-lino cuello mao lisa (Blanco)', category: 'Camisas niño', price: '12,80 €', brand: 'Unit', gender: 'boy', sizes: ['6', '9-10'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A55840475-camisa-de-nino-algodon-lino-cuello-mao-lisa/',imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/21/00154183201653____2__967x1200.jpg' },
+        { name: 'Camisa algodón-lino rayas (Verde)',  category: 'Camisas niño', price: '12,80 €', brand: 'Unit', gender: 'boy', sizes: ['6', '9-10'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A55840190-camisa-de-nino-algodon-lino-rayas/',       imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/03/00154183201620____3__967x1200.jpg' },
+        // ─── Niño: Jerséis ──────────────────────────────────────────────────────
+        { name: 'Jersey cuello pico (Verde Pato)',    category: 'Jerséis niño', price: '9,80 €', brand: 'Unit', gender: 'boy', sizes: ['6', '9-10'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A55794172-jersey-de-nino-cuello-pico/',           imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/02/00154181200764____2__967x1200.jpg' },
+        { name: 'Jersey cuello caja punto liso (Azul)', category: 'Jerséis niño', price: '9,80 €', brand: 'Unit', gender: 'boy', sizes: ['6', '9-10'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A55794049-jersey-de-nino-cuello-caja-punto-liso/',   imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/03/00154181200707____3__967x1200.jpg' },
+        { name: 'Jersey cuello caja rayas (Azul)',    category: 'Jerséis niño', price: '9,80 €', brand: 'Unit', gender: 'boy', sizes: ['6', '9-10'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A55794113-jersey-de-nino-cuello-caja-rayas/',     imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/03/00154181200731____3__967x1200.jpg' },
+        { name: 'Jersey cuello pico (Morado)',        category: 'Jerséis niño', price: '9,80 €', brand: 'Unit', gender: 'boy', sizes: ['6', '9-10'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A55794157-jersey-de-nino-cuello-pico/',           imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/03/00154181200756____3__967x1200.jpg' },
+        // ─── Niño: Baño ─────────────────────────────────────────────────────────
+        { name: 'Bañador bermuda flor abstracta (Azul claro)', category: 'Baño niño', price: '12 €', brand: 'Unit', gender: 'boy', sizes: ['6', '9-10'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56553734-banador-bermuda-de-nino-flor-abstracta/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202601/08/00154189305615____2__967x1200.jpg' },
+        { name: 'Bañador bóxer flor abstracta (Azul claro)', category: 'Baño niño', price: '8 €', brand: 'Unit', gender: 'boy', sizes: ['6', '9-10'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56553818-banador-boxer-infantil-flor-abstracta/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/02/00154189103812____3__967x1200.jpg' },
+        // ─── Niño: Pijamas ──────────────────────────────────────────────────────
+        { name: 'Pijama largo de rayas',              category: 'Pijamas niño', price: '13,30 €',brand: 'Unit', gender: 'boy', sizes: ['6', '9-10'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A55594194-pijama-de-nino-largo-de-rayas/',      imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/02/00198481103632____2__967x1200.jpg' },
+        { name: 'Pijama gasa corto (Blanco roto)',    category: 'Pijamas niño', price: '12 €',   brand: 'Unit', gender: 'boy', sizes: ['6', '9-10'], stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56023336-pijama-de-nino-de-gasa-corto/',        imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/26/00198481103848____1__967x1200.jpg' },
+      ];
 
   /* ===================================================
    * STATE
@@ -758,23 +789,20 @@
    * @returns {Element|null}
    */
   function buildSizeTag(product) {
-    if (!product.hasSize78 && product.hasSize78 !== null) return null;
-    const tag = el('span', { className: 'tag tag--size' });
-    if (product.hasSize78 === null) {
-      tag.classList.add('tag--size-pending');
-      tag.textContent = '? 7-8';
-      tag.setAttribute('aria-label', 'Talla 7-8 pendiente de verificar');
-    } else if (product.stock === 'soldOut') {
-      tag.classList.add('tag--size-soldout');
-      tag.textContent = '✗ 7-8';
-      tag.setAttribute('aria-label', 'Talla 7-8 agotada');
-    } else {
-      tag.classList.add('tag--size-ok');
-      tag.textContent = '✓ 7-8';
-      tag.setAttribute('aria-label', 'Talla 7-8 disponible');
+      if (!product.sizes || product.sizes.length === 0) return null;
+      const tag = el('span', { className: 'tag tag--size' });
+      const s = product.sizes.join('/');
+      if (product.stock === 'soldOut') {
+        tag.classList.add('tag--size-soldout');
+        tag.textContent = '✗ ' + s;
+        tag.setAttribute('aria-label', 'Talla ' + s + ' agotada');
+      } else {
+        tag.classList.add('tag--size-ok');
+        tag.textContent = '✓ ' + s;
+        tag.setAttribute('aria-label', 'Talla ' + s + ' disponible');
+      }
+      return tag;
     }
-    return tag;
-  }
 
   /**
    * Badge shown inside card info block.
@@ -782,22 +810,21 @@
    * @returns {Element}
    */
   function buildSizeBadge(product) {
-    const badge = el('div', { className: 'badge' });
-    if (product.hasSize78 && product.stock === 'available') {
-      badge.classList.add('badge--success');
-      badge.textContent = '✅ Talla 7-8';
-    } else if (product.stock === 'soldOut') {
-      badge.classList.add('badge--danger');
-      badge.textContent = '❌ Agotado 7-8';
-    } else if (product.hasSize78 === null) {
-      badge.classList.add('badge--warning');
-      badge.textContent = '🔍 Pendiente';
-    } else {
-      badge.classList.add('badge--danger');
-      badge.textContent = '❌ Sin talla 7-8';
+      if (!product.sizes || product.sizes.length === 0) return null;
+      const emoji = product.gender === 'boy' ? '👦' : '👧';
+      const wrapper = document.createElement('div');
+      wrapper.className = 'size-badges';
+      product.sizes.forEach(s => {
+        const ok = product.stock === 'available';
+        const cls = ok ? 'badge--success' : 'badge--danger';
+        const txt = ok ? '✅' : '❌';
+        const badge = document.createElement('span');
+        badge.className = 'badge ' + cls;
+        badge.textContent = emoji + ' ' + txt + ' ' + s;
+        wrapper.append(badge);
+      });
+      return wrapper;
     }
-    return badge;
-  }
 
   /**
    * Stock status line below badge.
@@ -946,7 +973,7 @@
     document.getElementById('totalCount').textContent    = PRODUCTS.length;
     document.getElementById('trackingCount').textContent = tracked.size;
     document.getElementById('withTalla78').textContent   =
-      PRODUCTS.filter((p) => p.hasSize78 && p.stock === 'available').length;
+      PRODUCTS.filter((p) => p.sizes && p.sizes.length > 0 && p.stock === 'available').length;
   }
 
   function render() {
@@ -1037,9 +1064,9 @@
       showToast('⚠️ Marca productos primero con el checkbox');
       return;
     }
-    const valid = selection.filter((p) => p.hasSize78 === true && p.stock === 'available');
+    const valid = selection.filter((p) => p.sizes && p.sizes.length > 0 && p.stock === 'available');
     if (valid.length === 0) {
-      showToast('⚠️ Ningún producto seleccionado tiene talla 7-8 disponible');
+      showToast('⚠️ Ningún producto seleccionado tiene talla disponible');
       return;
     }
     showToast(`🛒 Abriendo ${valid.length} producto(s) en Hipercor...`);
@@ -1098,7 +1125,7 @@
   document.getElementById('btnClear').addEventListener('click', handleClear);
   document.getElementById('btnCart').addEventListener('click', handleCart);
 
-  /* ===================================================
+    /* ===================================================
    * INIT
    * =================================================== */
   setupFilters();
