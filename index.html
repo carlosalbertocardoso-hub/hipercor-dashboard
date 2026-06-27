@@ -1,258 +1,1111 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hipercor Niña 7-8 Años - Dashboard</title>
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; color: #333; padding: 20px; }
-  h1 { font-size: 24px; margin-bottom: 5px; }
-  .subtitle { color: #666; margin-bottom: 20px; font-size: 14px; }
-  .warning { background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; font-size: 13px; color: #856404; }
-  .stats { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 20px; }
-  .stat-card { background: white; border-radius: 12px; padding: 15px 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); flex: 1; min-width: 120px; }
-  .stat-card .num { font-size: 28px; font-weight: 700; color: #1a1a1a; }
-  .stat-card .num.green { color: #4CAF50; }
-  .stat-card .label { font-size: 12px; color: #888; margin-top: 2px; }
-  .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
-  .filters button { padding: 8px 16px; border: 1px solid #ddd; border-radius: 20px; background: white; cursor: pointer; font-size: 13px; transition: all .2s; }
-  .filters button:hover { border-color: #999; }
-  .filters button.active { background: #1a1a1a; color: white; border-color: #1a1a1a; }
-  .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
-  .product-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: box-shadow .2s, transform .2s; position: relative; }
-  .product-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.12); transform: translateY(-2px); }
-  .product-card .img-wrap { width: 100%; aspect-ratio: 0.8; background: #f0f0f0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-  .product-card .img-wrap img { width: 100%; height: 100%; object-fit: cover; }
-  .product-card .img-wrap .no-img { color: #ccc; font-size: 40px; }
-  .product-card .info { padding: 10px 12px 12px; }
-  .product-card .brand { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #999; margin-bottom: 2px; }
-  .product-card .name { font-size: 13px; font-weight: 500; line-height: 1.3; margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-  .product-card .price { font-size: 16px; font-weight: 700; }
-  .talla-badge { display: inline-block; margin-top: 5px; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 700; letter-spacing: .3px; }
-  .talla-badge.ok { background: #2e7d32; color: #fff; }
-  .talla-badge.agotado { background: #c62828; color: #fff; }
-  .talla-badge.pendiente { background: #ef6c00; color: #fff; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hipercor Niña 7-8 — Dashboard</title>
+  <style>
+    /* ===================================================
+     * DESIGN TOKENS
+     * =================================================== */
+    :root {
+      /* Colors */
+      --color-primary:          #1a1a1a;
+      --color-primary-hover:    #333333;
+      --color-success:          #2e7d32;
+      --color-success-light:    #4caf50;
+      --color-danger:           #c62828;
+      --color-danger-light:     #f44336;
+      --color-warning:          #ef6c00;
+      --color-warning-bg:       #fff3cd;
+      --color-warning-border:   #ffc107;
+      --color-warning-text:     #856404;
+      --color-bg:               #f5f5f5;
+      --color-surface:          #ffffff;
+      --color-border:           #dddddd;
+      --color-text-primary:     #1a1a1a;
+      --color-text-secondary:   #666666;
+      --color-text-muted:       #888888;
+      --color-text-faint:       #999999;
+      --color-overlay:          rgba(0, 0, 0, 0.6);
+      --color-shadow-sm:        rgba(0, 0, 0, 0.08);
+      --color-shadow-md:        rgba(0, 0, 0, 0.12);
+      --color-shadow-lg:        rgba(0, 0, 0, 0.28);
 
-  /* Tags */
-  .cat-tag { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.6); color: white; font-size: 10px; padding: 2px 8px; border-radius: 10px; z-index: 1; }
-  .talla-tag { position: absolute; top: 8px; right: 36px; font-size: 11px; padding: 2px 8px; border-radius: 10px; z-index: 1; font-weight: 600; }
-  .talla-tag.ok { background: #4CAF50; color: white; }
-  .talla-tag.no { background: #ff9800; color: white; }
-  .talla-tag.agotado { background: #f44336; color: white; }
-  .checkbox-wrap { position: absolute; top: 8px; right: 8px; z-index: 2; }
-  .checkbox-wrap input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-color: #4CAF50; }
-  .product-card.tracked { outline: 2px solid #4CAF50; outline-offset: -2px; }
-  .product-card .tracked-badge { display: none; position: absolute; bottom: 8px; right: 8px; background: #4CAF50; color: white; font-size: 10px; padding: 2px 8px; border-radius: 10px; z-index: 1; }
-  .product-card.tracked .tracked-badge { display: block; }
-  .empty-state { text-align: center; padding: 60px 20px; color: #999; }
-  .empty-state .icon { font-size: 60px; margin-bottom: 15px; }
-  .actions { margin: 20px 0; display: flex; gap: 10px; flex-wrap: wrap; }
-  .actions button { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all .2s; }
-  .btn-primary { background: #1a1a1a; color: white; }
-  .btn-primary:hover { background: #333; }
-  .btn-secondary { background: #e0e0e0; color: #333; }
-  .btn-secondary:hover { background: #ccc; }
-  .btn-danger { background: #ff4444; color: white; }
-  .btn-danger:hover { background: #cc0000; }
-  .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 12px 24px; border-radius: 8px; font-size: 14px; opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 100; }
-  .toast.show { opacity: 1; }
-  .price.old { font-size: 11px; color: #999; text-decoration: line-through; font-weight: 400; margin-right: 4px; }
-  .stock-status { font-size: 11px; margin-top: 2px; }
-  .stock-status.available { color: #4CAF50; }
-  .stock-status.agotado { color: #f44336; }
-  a.product-link { color: inherit; text-decoration: none; }
-  @media (max-width: 600px) { .product-grid { grid-template-columns: repeat(2, 1fr); } }
-</style>
+      /* Spacing */
+      --space-xs:   4px;
+      --space-sm:   8px;
+      --space-md:  12px;
+      --space-lg:  16px;
+      --space-xl:  20px;
+      --space-2xl: 24px;
+
+      /* Border radii */
+      --radius-sm:   8px;
+      --radius-md:  12px;
+      --radius-pill: 20px;
+      --radius-tag:  10px;
+
+      /* Typography */
+      --font-xs:   10px;
+      --font-sm:   11px;
+      --font-base: 13px;
+      --font-md:   14px;
+      --font-lg:   16px;
+      --font-xl:   24px;
+      --font-stat: 28px;
+    }
+
+    /* ===================================================
+     * RESET
+     * =================================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ===================================================
+     * BASE
+     * =================================================== */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text-primary);
+      padding: var(--space-xl);
+    }
+
+    /* ===================================================
+     * SKIP LINK (accessibility)
+     * =================================================== */
+    .skip-link {
+      position: absolute;
+      left: -9999px;
+      top: var(--space-sm);
+      z-index: 200;
+      background: var(--color-primary);
+      color: var(--color-surface);
+      padding: var(--space-sm) var(--space-lg);
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      font-size: var(--font-md);
+    }
+    .skip-link:focus { left: var(--space-sm); }
+
+    /* ===================================================
+     * HEADER
+     * =================================================== */
+    header { margin-bottom: var(--space-xl); }
+
+    h1 { font-size: var(--font-xl); }
+
+    .subtitle {
+      color: var(--color-text-secondary);
+      margin-top: var(--space-xs);
+      font-size: var(--font-md);
+    }
+
+    /* ===================================================
+     * NOTICE
+     * =================================================== */
+    .notice {
+      background: var(--color-warning-bg);
+      border: 1px solid var(--color-warning-border);
+      border-radius: var(--radius-sm);
+      padding: var(--space-md) var(--space-lg);
+      margin-bottom: var(--space-lg);
+      font-size: var(--font-base);
+      color: var(--color-warning-text);
+    }
+
+    /* ===================================================
+     * STATS
+     * =================================================== */
+    .stats {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-bottom: var(--space-xl);
+    }
+    .stat-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      padding: 15px var(--space-xl);
+      box-shadow: 0 1px 3px var(--color-shadow-sm);
+      flex: 1;
+      min-width: 120px;
+    }
+    .stat-card__num {
+      font-size: var(--font-stat);
+      font-weight: 700;
+    }
+    .stat-card__num--success { color: var(--color-success-light); }
+    .stat-card__label {
+      font-size: var(--font-xs);
+      color: var(--color-text-muted);
+      margin-top: 2px;
+    }
+
+    /* ===================================================
+     * FILTER NAV
+     * =================================================== */
+    .filter-nav {
+      display: flex;
+      gap: var(--space-sm);
+      flex-wrap: wrap;
+      margin-bottom: var(--space-xl);
+    }
+    .filter-nav__btn {
+      padding: var(--space-sm) var(--space-lg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-pill);
+      background: var(--color-surface);
+      cursor: pointer;
+      font-size: var(--font-base);
+      color: var(--color-text-primary);
+      transition: border-color 0.2s, background 0.2s, color 0.2s;
+    }
+    .filter-nav__btn:hover { border-color: var(--color-text-muted); }
+    .filter-nav__btn[aria-pressed="true"] {
+      background: var(--color-primary);
+      color: var(--color-surface);
+      border-color: var(--color-primary);
+    }
+    .filter-nav__btn:focus-visible {
+      outline: 2px solid var(--color-success-light);
+      outline-offset: 2px;
+    }
+
+    /* ===================================================
+     * ACTIONS TOOLBAR
+     * =================================================== */
+    .actions {
+      margin: var(--space-xl) 0;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 10px var(--space-xl);
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: var(--font-md);
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+    .btn:focus-visible {
+      outline: 2px solid var(--color-success-light);
+      outline-offset: 2px;
+    }
+    .btn--secondary { background: #e0e0e0; color: var(--color-text-primary); }
+    .btn--secondary:hover { background: #cccccc; }
+    .btn--danger { background: var(--color-danger); color: var(--color-surface); }
+    .btn--danger:hover { background: var(--color-danger-light); }
+
+    /* ===================================================
+     * PRODUCT GRID
+     * =================================================== */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: var(--space-md);
+      list-style: none;
+    }
+    @media (max-width: 600px) {
+      .product-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (min-width: 1200px) {
+      .product-grid { grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); }
+    }
+
+    /* ===================================================
+     * PRODUCT CARD
+     * =================================================== */
+    .product-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: 0 1px 3px var(--color-shadow-sm);
+      transition: box-shadow 0.2s, transform 0.2s;
+      position: relative;
+    }
+    .product-card:hover {
+      box-shadow: 0 4px 12px var(--color-shadow-md);
+      transform: translateY(-2px);
+    }
+    .product-card[data-tracked="true"] {
+      outline: 2px solid var(--color-success-light);
+      outline-offset: -2px;
+    }
+
+    /* Image wrapper — 4:5 ratio matches Hipercor CDN portrait images */
+    .product-card__img-wrap {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      background: #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .product-card__img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .product-card__img-placeholder {
+      font-size: 40px;
+      color: #cccccc;
+      user-select: none;
+    }
+
+    /* Info block */
+    .product-card__info { padding: 10px var(--space-md) var(--space-md); }
+
+    .product-card__brand {
+      font-size: var(--font-xs);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--color-text-faint);
+      margin-bottom: 2px;
+    }
+    .product-card__name {
+      font-size: var(--font-base);
+      font-weight: 500;
+      line-height: 1.3;
+      margin-bottom: var(--space-xs);
+      /* Standard + prefixed for max browser support */
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      color: var(--color-text-primary);
+    }
+    .product-card__price {
+      font-size: var(--font-lg);
+      font-weight: 700;
+    }
+
+    /* Product link covers image + info */
+    .product-card__link {
+      display: block;
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* ===================================================
+     * BADGES (inside card info)
+     * =================================================== */
+    .badge {
+      display: inline-block;
+      margin-top: 5px;
+      padding: 3px 10px;
+      border-radius: var(--radius-md);
+      font-size: var(--font-sm);
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      color: var(--color-surface);
+    }
+    .badge--success { background: var(--color-success); }
+    .badge--danger  { background: var(--color-danger); }
+    .badge--warning { background: var(--color-warning); }
+
+    /* Stock line */
+    .stock-status {
+      font-size: var(--font-sm);
+      margin-top: 2px;
+    }
+    .stock-status--available { color: var(--color-success-light); }
+    .stock-status--soldOut   { color: var(--color-danger-light); }
+
+    /* ===================================================
+     * OVERLAY TAGS (position: absolute on card)
+     * =================================================== */
+    .tag {
+      position: absolute;
+      top: var(--space-sm);
+      font-size: var(--font-xs);
+      padding: 2px var(--space-sm);
+      border-radius: var(--radius-tag);
+      z-index: 1;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+    .tag--category {
+      left: var(--space-sm);
+      background: var(--color-overlay);
+      color: var(--color-surface);
+      font-weight: 400;
+    }
+    .tag--size         { right: 36px; font-size: var(--font-sm); }
+    .tag--size-ok      { background: var(--color-success-light); color: var(--color-surface); }
+    .tag--size-soldout { background: var(--color-danger-light);  color: var(--color-surface); }
+    .tag--size-pending { background: #ff9800;                    color: var(--color-surface); }
+
+    /* ===================================================
+     * CHECKBOX WRAP
+     * =================================================== */
+    .checkbox-wrap {
+      position: absolute;
+      top: var(--space-sm);
+      right: var(--space-sm);
+      z-index: 2;
+    }
+    .checkbox-wrap label { display: flex; align-items: center; cursor: pointer; }
+    .checkbox-wrap input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      accent-color: var(--color-success-light);
+    }
+
+    /* Tracked badge */
+    .tracked-badge {
+      display: none;
+      position: absolute;
+      bottom: var(--space-sm);
+      right: var(--space-sm);
+      background: var(--color-success-light);
+      color: var(--color-surface);
+      font-size: var(--font-xs);
+      padding: 2px var(--space-sm);
+      border-radius: var(--radius-tag);
+      z-index: 1;
+      pointer-events: none;
+    }
+    .product-card[data-tracked="true"] .tracked-badge { display: block; }
+
+    /* ===================================================
+     * EMPTY STATE
+     * =================================================== */
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px var(--space-xl);
+      color: var(--color-text-muted);
+    }
+    .empty-state__icon {
+      display: block;
+      font-size: 60px;
+      margin-bottom: 15px;
+      user-select: none;
+    }
+
+    /* ===================================================
+     * TOAST
+     * =================================================== */
+    .toast {
+      position: fixed;
+      bottom: var(--space-xl);
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--color-primary);
+      color: var(--color-surface);
+      padding: var(--space-md) var(--space-2xl);
+      border-radius: var(--radius-sm);
+      font-size: var(--font-md);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      z-index: 100;
+    }
+    .toast[aria-hidden="false"] { opacity: 1; }
+
+    /* ===================================================
+     * CONFIRM DIALOG
+     * =================================================== */
+    .dialog-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 150;
+      align-items: center;
+      justify-content: center;
+    }
+    .dialog-backdrop[aria-hidden="false"] { display: flex; }
+    .dialog {
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      padding: var(--space-2xl);
+      max-width: 320px;
+      width: 90%;
+      box-shadow: 0 8px 32px var(--color-shadow-lg);
+    }
+    .dialog__title {
+      font-size: var(--font-lg);
+      margin-bottom: var(--space-sm);
+    }
+    .dialog__desc {
+      color: var(--color-text-secondary);
+      font-size: var(--font-md);
+      margin-bottom: var(--space-xl);
+    }
+    .dialog__actions {
+      display: flex;
+      gap: var(--space-sm);
+      justify-content: flex-end;
+    }
+
+    /* ===================================================
+     * UTILITIES
+     * =================================================== */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+  </style>
 </head>
 <body>
 
-<h1>👗 Hipercor — Moda Niña 7-8 Años</h1>
-<p class="subtitle">✅ Marca los productos para seguimiento • El dashboard se guarda automáticamente en tu navegador</p>
+<a href="#main-content" class="skip-link">Saltar al contenido</a>
 
-<div class="warning">⚠️ El filtro de talla 7-8 de Hipercor no funciona correctamente. Muchos productos tienen la talla disponible aunque el filtro no los muestre. Este dashboard muestra los productos que hemos verificado manualmente.</div>
+<header>
+  <h1>Hipercor — Moda Niña 7-8 Años</h1>
+  <p class="subtitle">Marca los productos para seguimiento · Los cambios se guardan automáticamente</p>
+</header>
 
-<div class="stats">
-  <div class="stat-card"><div class="num" id="totalCount">0</div><div class="label">Productos totales</div></div>
-  <div class="stat-card"><div class="num" id="withTalla78">0</div><div class="label">Con talla 7-8 ✅</div></div>
-  <div class="stat-card tracking"><div class="num" id="trackingCount">0</div><div class="label">En seguimiento</div></div>
+<div class="notice" role="note">
+  <strong>Aviso:</strong> El filtro de talla 7-8 de Hipercor no funciona correctamente.
+  Muchos productos tienen la talla disponible aunque el filtro no los muestre.
+  Este dashboard muestra los productos verificados manualmente.
 </div>
 
-<div class="filters" id="filters"></div>
+<section aria-label="Estadísticas" class="stats">
+  <div class="stat-card">
+    <div class="stat-card__num" id="totalCount" aria-live="polite">0</div>
+    <div class="stat-card__label">Productos totales</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card__num stat-card__num--success" id="withTalla78" aria-live="polite">0</div>
+    <div class="stat-card__label">Con talla 7-8 disponible</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card__num" id="trackingCount" aria-live="polite">0</div>
+    <div class="stat-card__label">En seguimiento</div>
+  </div>
+</section>
 
-<div class="actions">
-  <button class="btn-primary" onclick="saveSelection()">💾 Guardar selección</button>
-  <button class="btn-secondary" onclick="clearSelection()">🗑️ Limpiar</button>
-  <button class="btn-secondary" onclick="exportSelection()">📤 Exportar</button>
+<nav class="filter-nav" id="filterNav" aria-label="Filtrar por categoría"></nav>
+
+<div class="actions" role="toolbar" aria-label="Acciones">
+  <button class="btn btn--primary" id="btnCart">
+    <span aria-hidden="true">🛒</span> Abrir en Hipercor
+  </button>
+  <button class="btn btn--secondary" id="btnExport">
+    <span aria-hidden="true">📤</span> Exportar selección
+  </button>
+  <button class="btn btn--danger" id="btnClear">
+    <span aria-hidden="true">🗑️</span> Limpiar seguimiento
+  </button>
 </div>
 
-<div class="product-grid" id="productGrid"></div>
-<div id="toast" class="toast"></div>
+<main id="main-content">
+  <ul class="product-grid" id="productGrid" aria-label="Productos"></ul>
+</main>
+
+<!-- Toast notification -->
+<div
+  id="toast"
+  class="toast"
+  role="status"
+  aria-live="polite"
+  aria-atomic="true"
+  aria-hidden="true"
+></div>
+
+<!-- Confirm dialog -->
+<div
+  id="confirmDialog"
+  class="dialog-backdrop"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="dialogTitle"
+  aria-describedby="dialogDesc"
+  aria-hidden="true"
+>
+  <div class="dialog">
+    <h2 class="dialog__title" id="dialogTitle">¿Limpiar seguimiento?</h2>
+    <p class="dialog__desc" id="dialogDesc">Se eliminarán todos los productos marcados. Esta acción no se puede deshacer.</p>
+    <div class="dialog__actions">
+      <button class="btn btn--secondary" id="dialogCancel">Cancelar</button>
+      <button class="btn btn--danger" id="dialogConfirm">Limpiar</button>
+    </div>
+  </div>
+</div>
 
 <script>
-const ALL_PRODUCTS = [
-  // ===== PANTALONES Y PETOS =====
-  {n:"Peto de rayas family",c:"Pantalones",p:"13,30€",u:"https://www.hipercor.es/moda-y-accesorios/A56208017-peto-de-rayas-family/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/14/00103685301867____5__967x1200.jpg",b:"Unit",t78:"SI",stk:"ok"},
-  {n:"Peto Vichy Seersucker",c:"Pantalones",p:"13,30€",u:"https://www.hipercor.es/moda-y-accesorios/A56207985-peto-vichy-seersucker/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/14/00103685301859____6__967x1200.jpg",b:"Unit",t78:"SI",stk:"ok"},
-  {n:"Peto niña largo denim",c:"Pantalones",p:"13,30€",u:"https://www.hipercor.es/moda-y-accesorios/A56114831-peto-nina-largo-denim/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/06/00103685301735____2__967x1200.jpg",b:"Unit",t78:"SI",stk:"ok"},
-  {n:"Pantalón niña carpintero",c:"Pantalones",p:"11,90€",u:"https://www.hipercor.es/moda-y-accesorios/A56130245-pantalon-nina-carpintero/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/17/00103685301800____3__967x1200.jpg",b:"Unit",t78:"SI",stk:"ok"},
-  {n:"Peto niña largo de lino",c:"Pantalones",p:"13,30€",u:"https://www.hipercor.es/moda-y-accesorios/A56130395-peto-nina-largo-de-lino/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/11/00103685301818____1__967x1200.jpg",b:"Unit",t78:"SI",stk:"ok"},
-  {n:"Short niña lino estampado",c:"Pantalones",p:"14€",u:"https://www.hipercor.es/moda-y-accesorios/A56255691-short-nina-de-lino-estampado/",i:"https://dam.elcorteingles.es/producto/www-001003685103818-00.jpg",b:"Unit",t78:"SI",stk:"ok"},
-  
-  // ===== VESTIDOS =====
-  {n:"Vestido lino bordados (Carmín)",c:"Vestidos",p:"16,80€",u:"https://www.hipercor.es/moda-y-accesorios/A55982328-vestido-nina-de-lino-con-bordados-en-el-cuello/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202510/20/00103688103476____6__967x1200.jpg",b:"Unit",t78:"SI",stk:"ok"},
-  {n:"Vestido lino bordados (Gris claro)",c:"Vestidos",p:"16,80€",u:"https://www.hipercor.es/moda-y-accesorios/A55982295-vestido-nina-de-lino-con-bordados-en-el-cuello/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202510/17/00103688103468____1__967x1200.jpg",b:"Unit",t78:"SI",stk:"ok"},
-  {n:"Vestido doble gasa (Azul pálido)",c:"Vestidos",p:"16,80€",u:"https://www.hipercor.es/moda-y-accesorios/A56012569-vestido-nina-de-doble-gasa-estampado/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/06/00103688103526____2__967x1200.jpg",b:"Unit",t78:"SI",stk:"ok"},
-  {n:"Vestido doble gasa (Verde oscuro)",c:"Vestidos",p:"16,80€",u:"https://www.hipercor.es/moda-y-accesorios/A56012594-vestido-nina-de-doble-gasa-estampado/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/06/00103688103534____2__967x1200.jpg",b:"Unit",t78:"SI",stk:"agotado"},
-  {n:"Vestido gasa vichy (Oliva)",c:"Vestidos",p:"16,80€",u:"https://www.hipercor.es/moda-y-accesorios/A56012611-vestido-nina-de-gasa-de-cuadros-vichy/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/06/00103688103542____2__967x1200.jpg",b:"Unit",t78:"SI",stk:"ok"},
-  {n:"Vestido schiffli (Blanco)",c:"Vestidos",p:"16,80€",u:"https://www.hipercor.es/moda-y-accesorios/A56369559-vestido-nina-schiffli/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/09/00103688103732____2__967x1200.jpg",b:"Unit",t78:"SI",stk:"ok"},
-  {n:"Vestido con smock (Jabón)",c:"Vestidos",p:"16,80€",u:"https://www.hipercor.es/moda-y-accesorios/A56255718-vestido-nina-con-smock/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/14/00103688103690____4__967x1200.jpg",b:"Unit",t78:"SI",stk:"agotado"},
-  {n:"Vestido camisero rayas (Rosa)",c:"Vestidos",p:"16,80€",u:"https://www.hipercor.es/moda-y-accesorios/A56235352-vestido-nina-camisero-rayas/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/13/00103688103682____5__967x1200.jpg",b:"Unit",t78:"SI",stk:"ok"},
-  {n:"Vestido rayas (Fucsia)",c:"Vestidos",p:"16,80€",u:"https://www.hipercor.es/moda-y-accesorios/A56324610-vestido-nina-de-rayas/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202601/27/00103688103716____1__967x1200.jpg",b:"Unit",t78:"SI",stk:"ok"},
+'use strict';
 
-  // ===== CAMISETAS =====
-  {n:"Camiseta cuello crochét",c:"Camisetas",p:"~15€",u:"https://www.hipercor.es/moda-y-accesorios/A56215017-camiseta-nina-con-cuello-de-crochet/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/13/00103684209624____3__967x1200.jpg",b:"Unit",t78:"SI",stk:"ok"},
-  {n:"Camiseta cuello doble (Blanco)",c:"Camisetas",p:"~15€",u:"https://www.hipercor.es/moda-y-accesorios/A56215091-camiseta-nina-con-cuello-doble/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/13/00103684209657____1__967x1200.jpg",b:"Unit",t78:"SI",stk:"ok"},
-  {n:"Camiseta volante gasa (Rosa)",c:"Camisetas",p:"8€",u:"https://www.hipercor.es/moda-y-accesorios/A56191468-camiseta-nina-con-volante-de-gasa/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202601/27/00103684209558____2__967x1200.jpg",b:"Unit",t78:"SI",stk:"agotado"},
-  {n:"Camiseta punto de cruz (Verde)",c:"Camisetas",p:"~15€",u:"https://www.hipercor.es/moda-y-accesorios/A56197651-camiseta-nina-punto-de-cruz/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/30/00103684209574____3__967x1200.jpg",b:"Unit",t78:"SI",stk:"ok"},
-  {n:"Camiseta cuello crochét (Amarillo)",c:"Camisetas",p:"~15€",u:"https://www.hipercor.es/moda-y-accesorios/A56215074-camiseta-nina-con-cuello-de-crochet/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/15/00103684209640____2__967x1200.jpg",b:"Unit",t78:"SI",stk:"ok"},
+(function () {
 
-  // ===== BLUSAS =====
-  {n:"Blusa niña cuello flor",c:"Blusas",p:"15€",u:"https://www.hipercor.es/moda-y-accesorios/A56255604-blusa-nina-con-cuello-flor/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/15/00103683002764____1__967x1200.jpg",b:"Unit",t78:"SI",stk:"agotado"},
-    {n:"Blusa niña abierta lino set",c:"Blusas",p:"15€",u:"https://www.hipercor.es/moda-y-accesorios/A56269951-blusa-nina-abierta-de-lino-set/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/30/00103683002806____3__967x1200.jpg",b:"Unit",t78:"SI",stk:"ok"},
+  /* ===================================================
+   * DATA
+   *
+   * Schema:
+   *   name       {string}           — display name
+   *   category   {string}           — product category
+   *   price      {string}           — display price (may include "~" for approx.)
+   *   brand      {string}           — brand label
+   *   hasSize78  {boolean|null}     — true=confirmed, false=not available, null=unverified
+   *   stock      {'available'|'soldOut'|'pending'}
+   *   url        {string}           — canonical Hipercor URL
+   *   imageUrl   {string|null}      — CDN image URL
+   * =================================================== */
+  const PRODUCTS = [
+    // ─── Pantalones ───────────────────────────────────────────────────────────
+    { name: 'Peto de rayas family',     category: 'Pantalones', price: '13,30 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56208017-peto-de-rayas-family/',          imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/14/00103685301867____5__967x1200.jpg' },
+    { name: 'Peto Vichy Seersucker',    category: 'Pantalones', price: '13,30 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56207985-peto-vichy-seersucker/',         imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/14/00103685301859____6__967x1200.jpg' },
+    { name: 'Peto niña largo denim',    category: 'Pantalones', price: '13,30 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56114831-peto-nina-largo-denim/',         imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/06/00103685301735____2__967x1200.jpg' },
+    { name: 'Pantalón niña carpintero', category: 'Pantalones', price: '11,90 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56130245-pantalon-nina-carpintero/',     imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/17/00103685301800____3__967x1200.jpg' },
+    { name: 'Peto niña largo de lino',  category: 'Pantalones', price: '13,30 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56130395-peto-nina-largo-de-lino/',     imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/11/00103685301818____1__967x1200.jpg' },
+    { name: 'Short niña lino estampado',category: 'Pantalones', price: '14 €',    brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56255691-short-nina-de-lino-estampado/', imageUrl: 'https://dam.elcorteingles.es/producto/www-001003685103818-00.jpg' },
 
-  // ===== FALDAS =====
-  {n:"Falda niña con bordados",c:"Faldas",p:"14€",u:"https://www.hipercor.es/moda-y-accesorios/A56369589-falda-nina-con-bordados/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/09/00103687101414____3__967x1200.jpg",b:"Unit",t78:"SI",stk:"ok"},
-    {n:"Falda niña vaquera (Crudo)",c:"Faldas",p:"14€",u:"https://www.hipercor.es/moda-y-accesorios/A56131667-falda-nina-vaquera/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/06/00103687101406____3__967x1200.jpg",b:"Unit",t78:"SI",stk:"ok"},
-    {n:"Falda niña colegial (Azul)",c:"Faldas",p:"15€",u:"https://www.hipercor.es/moda-y-accesorios/A50403255-falda-colegial/",i:"https://dam.elcorteingles.es/producto/www-001003645160379-00.jpg",b:"Unit",t78:"SI",stk:"ok"},
+    // ─── Vestidos ─────────────────────────────────────────────────────────────
+    { name: 'Vestido lino bordados (Carmín)',    category: 'Vestidos', price: '16,80 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A55982328-vestido-nina-de-lino-con-bordados-en-el-cuello/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202510/20/00103688103476____6__967x1200.jpg' },
+    { name: 'Vestido lino bordados (Gris claro)',category: 'Vestidos', price: '16,80 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A55982295-vestido-nina-de-lino-con-bordados-en-el-cuello/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202510/17/00103688103468____1__967x1200.jpg' },
+    { name: 'Vestido doble gasa (Azul pálido)', category: 'Vestidos', price: '16,80 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56012569-vestido-nina-de-doble-gasa-estampado/',             imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/06/00103688103526____2__967x1200.jpg' },
+    { name: 'Vestido doble gasa (Verde oscuro)', category: 'Vestidos', price: '16,80 €', brand: 'Unit', hasSize78: true, stock: 'soldOut',   url: 'https://www.hipercor.es/moda-y-accesorios/A56012594-vestido-nina-de-doble-gasa-estampado/',             imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/06/00103688103534____2__967x1200.jpg' },
+    { name: 'Vestido gasa vichy (Oliva)',        category: 'Vestidos', price: '16,80 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56012611-vestido-nina-de-gasa-de-cuadros-vichy/',             imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/06/00103688103542____2__967x1200.jpg' },
+    { name: 'Vestido schiffli (Blanco)',         category: 'Vestidos', price: '16,80 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56369559-vestido-nina-schiffli/',                             imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/09/00103688103732____2__967x1200.jpg' },
+    { name: 'Vestido con smock (Jabón)',         category: 'Vestidos', price: '16,80 €', brand: 'Unit', hasSize78: true, stock: 'soldOut',   url: 'https://www.hipercor.es/moda-y-accesorios/A56255718-vestido-nina-con-smock/',                            imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/14/00103688103690____4__967x1200.jpg' },
+    { name: 'Vestido camisero rayas (Rosa)',     category: 'Vestidos', price: '16,80 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56235352-vestido-nina-camisero-rayas/',                       imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/13/00103688103682____5__967x1200.jpg' },
+    { name: 'Vestido rayas (Fucsia)',            category: 'Vestidos', price: '16,80 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56324610-vestido-nina-de-rayas/',                             imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202601/27/00103688103716____1__967x1200.jpg' },
 
-  // ===== PIJAMAS =====
-  {n:"Pijama tirantes (Blanco roto)",c:"Pijamas",p:"~15€",u:"https://www.hipercor.es/moda-y-accesorios/A56395890-pijama-de-nina-con-tirantes/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202601/27/00198481004368____3__967x1200.jpg",b:"Unit",t78:"SI",stk:"ok"},
-  {n:"Pijama tirantes (Azul claro)",c:"Pijamas",p:"~15€",u:"https://www.hipercor.es/moda-y-accesorios/A56395902-pijama-de-nina-con-tirantes/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202601/27/00198481004376____2__967x1200.jpg",b:"Unit",t78:"SI",stk:"ok"},
-  {n:"Pijama popelin corto (Blanco)",c:"Pijamas",p:"~15€",u:"https://www.hipercor.es/moda-y-accesorios/A56131783-pijama-de-nina-popelin-corto/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/18/00198481004327____2__967x1200.jpg",b:"Unit",t78:"SI",stk:"ok"},
-  {n:"Pijama gasa corto estampado",c:"Pijamas",p:"~15€",u:"https://www.hipercor.es/moda-y-accesorios/A56024427-pijama-de-nina-de-gasa-corto-estampado/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/09/00198481004277____3__967x1200.jpg",b:"Unit",t78:"SI",stk:"ok"},
+    // ─── Camisetas ────────────────────────────────────────────────────────────
+    { name: 'Camiseta cuello crochét',           category: 'Camisetas', price: '~15 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56215017-camiseta-nina-con-cuello-de-crochet/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/13/00103684209624____3__967x1200.jpg' },
+    { name: 'Camiseta cuello doble (Blanco)',     category: 'Camisetas', price: '~15 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56215091-camiseta-nina-con-cuello-doble/',         imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/13/00103684209657____1__967x1200.jpg' },
+    { name: 'Camiseta volante gasa (Rosa)',       category: 'Camisetas', price: '8 €',   brand: 'Unit', hasSize78: true, stock: 'soldOut',   url: 'https://www.hipercor.es/moda-y-accesorios/A56191468-camiseta-nina-con-volante-de-gasa/',   imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202601/27/00103684209558____2__967x1200.jpg' },
+    { name: 'Camiseta punto de cruz (Verde)',     category: 'Camisetas', price: '~15 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56197651-camiseta-nina-punto-de-cruz/',          imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/30/00103684209574____3__967x1200.jpg' },
+    { name: 'Camiseta cuello crochét (Amarillo)',category: 'Camisetas', price: '~15 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56215074-camiseta-nina-con-cuello-de-crochet/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/15/00103684209640____2__967x1200.jpg' },
 
-  // ===== BAÑO =====
-  {n:"Bikini volante flores",c:"Baño",p:"15€",u:"https://www.hipercor.es/moda-y-accesorios/A56322579-bikini-nina-volante-flores/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/19/00103689206450____2__967x1200.jpg",b:"Unit",t78:"SI",stk:"agotado"},
-  {n:"Bañador volante indio",c:"Baño",p:"15€",u:"https://www.hipercor.es/moda-y-accesorios/A56506050-banador-nina-volante-indio/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202603/01/00103684503077____1__967x1200.jpg",b:"Unit",t78:"SI",stk:"ok"},
-  {n:"Bañador lazos flor (Fucsia)",c:"Baño",p:"15€",u:"https://www.hipercor.es/moda-y-accesorios/A56319884-banador-nina-lazos-flor/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/10/00103689107195____1__967x1200.jpg",b:"Unit",t78:"SI",stk:"ok"},
-  {n:"Kaftan bordado (Fucsia)",c:"Baño",p:"17€",u:"https://www.hipercor.es/moda-y-accesorios/A56796926-kaftan-de-nina-bordado/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202601/09/00103689301541____1__967x1200.jpg",b:"Unit",t78:"SI",stk:"ok"},
+    // ─── Blusas ───────────────────────────────────────────────────────────────
+    { name: 'Blusa niña cuello flor',      category: 'Blusas', price: '15 €', brand: 'Unit', hasSize78: true, stock: 'soldOut',   url: 'https://www.hipercor.es/moda-y-accesorios/A56255604-blusa-nina-con-cuello-flor/',    imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/15/00103683002764____1__967x1200.jpg' },
+    { name: 'Blusa niña abierta lino set', category: 'Blusas', price: '15 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56269951-blusa-nina-abierta-de-lino-set/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/30/00103683002806____3__967x1200.jpg' },
 
-  // ===== SUDADERAS =====
-  {n:"Sudadera cuello caja (Salmón)",c:"Sudaderas",p:"7€",u:"https://www.hipercor.es/moda-y-accesorios/A55982048-sudadera-nina-cuello-caja/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/02/00103682001551____3__967x1200.jpg",b:"Unit",t78:"SI",stk:"agotado"},
-  {n:"Sudadera cuello caja (Malva)",c:"Sudaderas",p:"~15€",u:"https://www.hipercor.es/moda-y-accesorios/A55982098-sudadera-nina-cuello-caja/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/10/00103682001569____2__967x1200.jpg",b:"Unit",t78:"SI",stk:"agotado"},
-  {n:"Sudadera rayas (Verde Pato)",c:"Sudaderas",p:"~15€",u:"https://www.hipercor.es/moda-y-accesorios/A55982173-sudadera-nina-rayas/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/02/00103682001585____3__967x1200.jpg",b:"Unit",t78:"SI",stk:"ok"},
+    // ─── Faldas ───────────────────────────────────────────────────────────────
+    { name: 'Falda niña con bordados',    category: 'Faldas', price: '14 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56369589-falda-nina-con-bordados/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/09/00103687101414____3__967x1200.jpg' },
+    { name: 'Falda niña vaquera (Crudo)', category: 'Faldas', price: '14 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56131667-falda-nina-vaquera/',       imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/06/00103687101406____3__967x1200.jpg' },
+    { name: 'Falda niña colegial (Azul)', category: 'Faldas', price: '15 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A50403255-falda-colegial/',           imageUrl: 'https://dam.elcorteingles.es/producto/www-001003645160379-00.jpg' },
 
-  // ===== CHAQUETAS =====
-  {n:"Chaqueta cuello volante (Crudo)",c:"Chaquetas",p:"~15€",u:"https://www.hipercor.es/moda-y-accesorios/A56110049-chaqueta-nina-cuello-volante/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/02/00103681000547____1__967x1200.jpg",b:"Unit",t78:"SI",stk:"ok"},
-  {n:"Chaqueta cuello blusa (Azul)",c:"Chaquetas",p:"~15€",u:"https://www.hipercor.es/moda-y-accesorios/A57741083-chaqueta-nina-cuello-blusa/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202604/06/00103661101695____2__967x1200.jpg",b:"Unit",t78:"SI",stk:"ok"},
-  {n:"Chaleco abertura (Crudo)",c:"Chaquetas",p:"~15€",u:"https://www.hipercor.es/moda-y-accesorios/A57547555-chaleco-nina-abertura/",i:"https://dam.elcorteingles.es/producto/www-001003661002638-00.jpg",b:"Unit",t78:"SI",stk:"ok"}
-];
+    // ─── Pijamas ──────────────────────────────────────────────────────────────
+    { name: 'Pijama tirantes (Blanco roto)',   category: 'Pijamas', price: '~15 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56395890-pijama-de-nina-con-tirantes/',            imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202601/27/00198481004368____3__967x1200.jpg' },
+    { name: 'Pijama tirantes (Azul claro)',    category: 'Pijamas', price: '~15 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56395902-pijama-de-nina-con-tirantes/',            imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202601/27/00198481004376____2__967x1200.jpg' },
+    { name: 'Pijama popelin corto (Blanco)',   category: 'Pijamas', price: '~15 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56131783-pijama-de-nina-popelin-corto/',           imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/18/00198481004327____2__967x1200.jpg' },
+    { name: 'Pijama gasa corto estampado',     category: 'Pijamas', price: '~15 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56024427-pijama-de-nina-de-gasa-corto-estampado/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/09/00198481004277____3__967x1200.jpg' },
 
-// ===== APP =====
-const STORAGE_KEY = 'hipercor_tracking';
+    // ─── Baño ─────────────────────────────────────────────────────────────────
+    { name: 'Bikini volante flores',       category: 'Baño', price: '15 €', brand: 'Unit', hasSize78: true, stock: 'soldOut',   url: 'https://www.hipercor.es/moda-y-accesorios/A56322579-bikini-nina-volante-flores/',  imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/19/00103689206450____2__967x1200.jpg' },
+    { name: 'Bañador volante indio',       category: 'Baño', price: '15 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56506050-banador-nina-volante-indio/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202603/01/00103684503077____1__967x1200.jpg' },
+    { name: 'Bañador lazos flor (Fucsia)', category: 'Baño', price: '15 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56319884-banador-nina-lazos-flor/',   imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/10/00103689107195____1__967x1200.jpg' },
+    { name: 'Kaftan bordado (Fucsia)',     category: 'Baño', price: '17 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56796926-kaftan-de-nina-bordado/',     imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202601/09/00103689301541____1__967x1200.jpg' },
 
-function loadTracking() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; }
-}
-function saveTracking(data) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-}
-let tracking = loadTracking();
+    // ─── Sudaderas ────────────────────────────────────────────────────────────
+    { name: 'Sudadera cuello caja (Salmón)',   category: 'Sudaderas', price: '7 €',    brand: 'Unit', hasSize78: true, stock: 'soldOut',   url: 'https://www.hipercor.es/moda-y-accesorios/A55982048-sudadera-nina-cuello-caja/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/02/00103682001551____3__967x1200.jpg' },
+    { name: 'Sudadera cuello caja (Malva)',    category: 'Sudaderas', price: '~15 €',   brand: 'Unit', hasSize78: true, stock: 'soldOut',   url: 'https://www.hipercor.es/moda-y-accesorios/A55982098-sudadera-nina-cuello-caja/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/10/00103682001569____2__967x1200.jpg' },
+    { name: 'Sudadera rayas (Verde Pato)',     category: 'Sudaderas', price: '~15 €',   brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A55982173-sudadera-nina-rayas/',       imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/02/00103682001585____3__967x1200.jpg' },
 
-function getCategories() {
-  return [...new Set(ALL_PRODUCTS.map(p => p.c))];
-}
+    // ─── Chaquetas ────────────────────────────────────────────────────────────
+    { name: 'Chaqueta cuello volante (Crudo)', category: 'Chaquetas', price: '~15 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A56110049-chaqueta-nina-cuello-volante/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/02/00103681000547____1__967x1200.jpg' },
+    { name: 'Chaqueta cuello blusa (Azul)',    category: 'Chaquetas', price: '~15 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A57741083-chaqueta-nina-cuello-blusa/', imageUrl: 'https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202604/06/00103661101695____2__967x1200.jpg' },
+    { name: 'Chaleco abertura (Crudo)',        category: 'Chaquetas', price: '~15 €', brand: 'Unit', hasSize78: true, stock: 'available', url: 'https://www.hipercor.es/moda-y-accesorios/A57547555-chaleco-nina-abertura/',      imageUrl: 'https://dam.elcorteingles.es/producto/www-001003661002638-00.jpg' },
+  ];
 
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2000);
-}
+  /* ===================================================
+   * STATE
+   * =================================================== */
+  const STORAGE_KEY = 'hipercor_tracking_v2';
 
-function tallaBadge(p) {
-  if (p.t78 === 'SI' && p.stk === 'ok') return '<div class="talla-badge ok">✅ 7-8</div>';
-  if (p.t78 === 'SI' && p.stk === 'agotado') return '<div class="talla-badge agotado">❌ 7-8 agotado</div>';
-  if (p.t78 === '?') return '<div class="talla-badge pendiente">🔍 Pendiente</div>';
-  if (p.t78 === 'NO') return '<div class="talla-badge agotado">❌ No 7-8</div>';
-  return '';
-}
+  /**
+   * Stable, unique key for each product.
+   * Using the URL slug avoids collisions and survives data reorders.
+   * @param {object} product
+   * @returns {string}
+   */
+  const productKey = (product) => product.url;
 
-function stockStatus(p) {
-  if (p.stk === 'ok') return '<div class="stock-status available">✅ En stock</div>';
-  if (p.stk === 'agotado') return '<div class="stock-status agotado">❌ Agotado</div>';
-  return '';
-}
+  /** @type {Set<string>} Keys of tracked products */
+  let tracked = new Set();
 
-function render() {
-  const activeCat = document.querySelector('.filters .active')?.dataset?.cat || 'all';
-  const grid = document.getElementById('productGrid');
-  let filtered = ALL_PRODUCTS;
-  if (activeCat !== 'all') filtered = ALL_PRODUCTS.filter(p => p.c === activeCat);
+  /** @type {string} Active category filter ('all' | category name) */
+  let activeCategory = 'all';
 
-  if (filtered.length === 0) {
-    grid.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>No hay productos</p></div>';
-    return;
+  /**
+   * Category list — derived once since PRODUCTS is a static constant.
+   * @type {string[]}
+   */
+  const CATEGORIES = [...new Set(PRODUCTS.map((p) => p.category))];
+
+  /* ===================================================
+   * PERSISTENCE
+   * =================================================== */
+  function loadTracking() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      const parsed = raw ? JSON.parse(raw) : [];
+      return new Set(Array.isArray(parsed) ? parsed : []);
+    } catch {
+      return new Set();
+    }
   }
 
-  grid.innerHTML = filtered.map(p => {
-    const checked = tracking[p.u] ? 'checked' : '';
-    const trackedClass = tracking[p.u] ? 'tracked' : '';
-    const imgHtml = p.i ? `<img src="${p.i}" alt="${p.n}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'no-img\\'>👗</div>'">` : '<div class="no-img">👗</div>';
-    return `<div class="product-card ${trackedClass}" data-url="${p.u}">
-      <span class="cat-tag">${p.c}</span>
-      <div class="checkbox-wrap"><input type="checkbox" ${checked} onchange="toggleTrack('${p.u.replace(/'/g,"\\'")}')"></div>
-      <a href="${p.u}" target="_blank" class="product-link">
-        <div class="img-wrap">${imgHtml}</div>
-        <div class="info">
-          <div class="brand">${p.b}</div>
-          <div class="name">${p.n}</div>
-          <div class="price">${p.p}</div>
-          ${tallaBadge(p)}
-          ${stockStatus(p)}
-        </div>
-      </a>
-      <span class="tracked-badge">✓ Seguido</span>
-    </div>`;
-  }).join('');
+  function saveTracking() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify([...tracked]));
+    } catch (err) {
+      console.error('[hipercor-dashboard] Failed to persist tracking:', err);
+    }
+  }
 
-  document.getElementById('totalCount').textContent = ALL_PRODUCTS.length;
-  document.getElementById('trackingCount').textContent = Object.keys(tracking).length;
-  document.getElementById('withTalla78').textContent = ALL_PRODUCTS.filter(p => p.t78 === 'SI' && p.stk === 'ok').length;
-}
+  tracked = loadTracking();
 
-function toggleTrack(url) {
-  if (tracking[url]) delete tracking[url];
-  else tracking[url] = true;
-  saveTracking(tracking);
+  /* ===================================================
+   * TOAST
+   * =================================================== */
+  const toastEl = document.getElementById('toast');
+  let toastTimer = null;
+
+  function showToast(message) {
+    // Clear any in-flight timer so rapid calls don't cancel each other
+    if (toastTimer !== null) clearTimeout(toastTimer);
+    toastEl.textContent = message;
+    toastEl.setAttribute('aria-hidden', 'false');
+    toastTimer = setTimeout(() => {
+      toastEl.setAttribute('aria-hidden', 'true');
+      toastTimer = null;
+    }, 2200);
+  }
+
+  /* ===================================================
+   * CONFIRM DIALOG
+   *
+   * Returns a Promise<boolean> — no window.confirm() needed.
+   * Handles Escape key and cleans up listeners after use.
+   * =================================================== */
+  const dialogEl    = document.getElementById('confirmDialog');
+  const dialogConfirmBtn = document.getElementById('dialogConfirm');
+  const dialogCancelBtn  = document.getElementById('dialogCancel');
+
+  function openConfirmDialog() {
+    return new Promise((resolve) => {
+      dialogEl.setAttribute('aria-hidden', 'false');
+      dialogConfirmBtn.focus();
+
+      function onConfirm() { cleanup(); resolve(true); }
+      function onCancel()  { cleanup(); resolve(false); }
+      function onKeydown(e) {
+        if (e.key === 'Escape') { cleanup(); resolve(false); }
+      }
+
+      function cleanup() {
+        dialogEl.setAttribute('aria-hidden', 'true');
+        dialogConfirmBtn.removeEventListener('click', onConfirm);
+        dialogCancelBtn.removeEventListener('click', onCancel);
+        dialogEl.removeEventListener('keydown', onKeydown);
+      }
+
+      dialogConfirmBtn.addEventListener('click', onConfirm);
+      dialogCancelBtn.addEventListener('click', onCancel);
+      dialogEl.addEventListener('keydown', onKeydown);
+    });
+  }
+
+  /* ===================================================
+   * DOM BUILDER HELPER
+   *
+   * Safe alternative to innerHTML string concatenation.
+   * Children may be strings (→ TextNode) or Elements.
+   *
+   * @param {string}  tag
+   * @param {object}  attrs
+   * @param {...(string|Element|null)} children
+   * @returns {Element}
+   * =================================================== */
+  function el(tag, attrs = {}, ...children) {
+    const node = document.createElement(tag);
+    for (const [key, value] of Object.entries(attrs)) {
+      if (key === 'className') {
+        node.className = value;
+      } else if (key === 'dataset') {
+        Object.assign(node.dataset, value);
+      } else {
+        node.setAttribute(key, value);
+      }
+    }
+    for (const child of children) {
+      if (child == null) continue;
+      node.append(typeof child === 'string' ? document.createTextNode(child) : child);
+    }
+    return node;
+  }
+
+  /* ===================================================
+   * CARD COMPONENTS
+   * =================================================== */
+
+  /**
+   * Overlay tag showing size availability.
+   * @param {object} product
+   * @returns {Element|null}
+   */
+  function buildSizeTag(product) {
+    if (!product.hasSize78 && product.hasSize78 !== null) return null;
+    const tag = el('span', { className: 'tag tag--size' });
+    if (product.hasSize78 === null) {
+      tag.classList.add('tag--size-pending');
+      tag.textContent = '? 7-8';
+      tag.setAttribute('aria-label', 'Talla 7-8 pendiente de verificar');
+    } else if (product.stock === 'soldOut') {
+      tag.classList.add('tag--size-soldout');
+      tag.textContent = '✗ 7-8';
+      tag.setAttribute('aria-label', 'Talla 7-8 agotada');
+    } else {
+      tag.classList.add('tag--size-ok');
+      tag.textContent = '✓ 7-8';
+      tag.setAttribute('aria-label', 'Talla 7-8 disponible');
+    }
+    return tag;
+  }
+
+  /**
+   * Badge shown inside card info block.
+   * @param {object} product
+   * @returns {Element}
+   */
+  function buildSizeBadge(product) {
+    const badge = el('div', { className: 'badge' });
+    if (product.hasSize78 && product.stock === 'available') {
+      badge.classList.add('badge--success');
+      badge.textContent = '✅ Talla 7-8';
+    } else if (product.stock === 'soldOut') {
+      badge.classList.add('badge--danger');
+      badge.textContent = '❌ Agotado 7-8';
+    } else if (product.hasSize78 === null) {
+      badge.classList.add('badge--warning');
+      badge.textContent = '🔍 Pendiente';
+    } else {
+      badge.classList.add('badge--danger');
+      badge.textContent = '❌ Sin talla 7-8';
+    }
+    return badge;
+  }
+
+  /**
+   * Stock status line below badge.
+   * @param {object} product
+   * @returns {Element|null}
+   */
+  function buildStockLine(product) {
+    if (product.stock === 'pending') return null;
+    const div = el('div', { className: 'stock-status' });
+    if (product.stock === 'available') {
+      div.classList.add('stock-status--available');
+      div.textContent = '✅ En stock';
+    } else {
+      div.classList.add('stock-status--soldOut');
+      div.textContent = '❌ Agotado';
+    }
+    return div;
+  }
+
+  /* ===================================================
+   * CARD BUILDER
+   *
+   * Builds a single <li> card using DOM APIs — no innerHTML.
+   * First EAGER_THRESHOLD cards use loading="eager" to avoid
+   * delaying the initial visible viewport.
+   * =================================================== */
+  const EAGER_THRESHOLD = 6;
+
+  /**
+   * @param {object} product
+   * @param {number} index  — position in the filtered list (for eager/lazy decision)
+   * @returns {HTMLLIElement}
+   */
+  function buildProductCard(product, index) {
+    const key       = productKey(product);
+    const isTracked = tracked.has(key);
+
+    // ── Card root ──
+    const card = el('li', {
+      className: 'product-card',
+      dataset: { tracked: String(isTracked) },
+    });
+    card.setAttribute('aria-label', product.name);
+
+    // ── Category overlay tag ──
+    const catTag = el('span', { className: 'tag tag--category', 'aria-hidden': 'true' });
+    catTag.textContent = product.category;
+
+    // ── Size overlay tag ──
+    const sizeTag = buildSizeTag(product);
+
+    // ── Checkbox ──
+    const checkboxWrap = el('div', { className: 'checkbox-wrap' });
+    const checkLabel   = el('label');
+    const checkbox     = el('input', { type: 'checkbox' });
+    checkbox.checked   = isTracked;
+    checkbox.setAttribute('aria-label', `Añadir "${product.name}" al seguimiento`);
+    checkbox.addEventListener('change', () => handleToggleTrack(key, card, checkbox));
+    checkLabel.append(checkbox, el('span', { className: 'sr-only' }, `Seguir ${product.name}`));
+    checkboxWrap.append(checkLabel);
+
+    // ── Image ──
+    const imgWrap = el('div', { className: 'product-card__img-wrap' });
+    if (product.imageUrl) {
+      const img = el('img', {
+        src:     product.imageUrl,
+        alt:     product.name,
+        loading: index < EAGER_THRESHOLD ? 'eager' : 'lazy',
+        // Hint browser of intrinsic size to prevent layout shift
+        width:  '967',
+        height: '1200',
+      });
+      img.addEventListener('error', () => {
+        const placeholder = el('span', { className: 'product-card__img-placeholder', 'aria-hidden': 'true' });
+        placeholder.textContent = '👗';
+        imgWrap.replaceChildren(placeholder);
+      });
+      imgWrap.append(img);
+    } else {
+      const placeholder = el('span', { className: 'product-card__img-placeholder', 'aria-hidden': 'true' });
+      placeholder.textContent = '👗';
+      imgWrap.append(placeholder);
+    }
+
+    // ── Info block ──
+    const brandEl = el('div', { className: 'product-card__brand' });
+    brandEl.textContent = product.brand;
+
+    const nameEl = el('h3', { className: 'product-card__name' });
+    nameEl.textContent = product.name;
+
+    const priceEl = el('div', { className: 'product-card__price' });
+    priceEl.textContent = product.price;
+
+    const stockLine = buildStockLine(product);
+
+    const info = el('div', { className: 'product-card__info' },
+      brandEl,
+      nameEl,
+      priceEl,
+      buildSizeBadge(product),
+      ...(stockLine ? [stockLine] : []),
+    );
+
+    // ── Product link (wraps image + info) ──
+    const link = el('a', {
+      href:   product.url,
+      target: '_blank',
+      rel:    'noopener noreferrer',
+      className: 'product-card__link',
+      'aria-label': `Ver ${product.name} en Hipercor (abre en nueva pestaña)`,
+    });
+    link.append(imgWrap, info);
+
+    // ── Tracked badge ──
+    const trackedBadge = el('span', { className: 'tracked-badge', 'aria-hidden': 'true' });
+    trackedBadge.textContent = '✓ Seguido';
+
+    // ── Assemble ──
+    card.append(
+      catTag,
+      ...(sizeTag ? [sizeTag] : []),
+      checkboxWrap,
+      link,
+      trackedBadge,
+    );
+
+    return card;
+  }
+
+  /* ===================================================
+   * RENDER
+   *
+   * Uses DocumentFragment for a single DOM write per render.
+   * toggleTrack updates cards in-place to avoid full re-renders.
+   * =================================================== */
+  const grid = document.getElementById('productGrid');
+
+  function getFiltered() {
+    return activeCategory === 'all'
+      ? PRODUCTS
+      : PRODUCTS.filter((p) => p.category === activeCategory);
+  }
+
+  function updateStats() {
+    document.getElementById('totalCount').textContent    = PRODUCTS.length;
+    document.getElementById('trackingCount').textContent = tracked.size;
+    document.getElementById('withTalla78').textContent   =
+      PRODUCTS.filter((p) => p.hasSize78 && p.stock === 'available').length;
+  }
+
+  function render() {
+    const filtered = getFiltered();
+    const fragment = document.createDocumentFragment();
+
+    if (filtered.length === 0) {
+      const empty    = el('li', { className: 'empty-state' });
+      const icon     = el('span', { className: 'empty-state__icon', 'aria-hidden': 'true' });
+      icon.textContent = '📭';
+      const message  = el('p');
+      message.textContent = 'No hay productos en esta categoría.';
+      empty.append(icon, message);
+      fragment.append(empty);
+    } else {
+      filtered.forEach((product, index) => {
+        fragment.append(buildProductCard(product, index));
+      });
+    }
+
+    grid.replaceChildren(fragment);
+    updateStats();
+  }
+
+  /* ===================================================
+   * ACTIONS
+   * =================================================== */
+
+  /**
+   * Toggle tracking state for a product.
+   * Updates the specific card in-place — no full re-render.
+   *
+   * @param {string}         key       — productKey(product)
+   * @param {HTMLElement}    cardEl    — the <li> card element
+   * @param {HTMLInputElement} checkEl — the checkbox inside the card
+   */
+  function handleToggleTrack(key, cardEl, checkEl) {
+    const nowTracked = !tracked.has(key);
+    if (nowTracked) {
+      tracked.add(key);
+    } else {
+      tracked.delete(key);
+    }
+    cardEl.dataset.tracked = String(nowTracked);
+    checkEl.checked        = nowTracked;
+    saveTracking();
+    document.getElementById('trackingCount').textContent = tracked.size;
+  }
+
+  function handleExport() {
+    const selection = PRODUCTS.filter((p) => tracked.has(productKey(p)));
+    if (selection.length === 0) {
+      showToast('⚠️ No hay productos en seguimiento');
+      return;
+    }
+    const text = selection
+      .map((p) => `☐ ${p.name} | ${p.price} | ${p.category}\n   ${p.url}`)
+      .join('\n');
+
+    navigator.clipboard.writeText(text).then(
+      () => showToast('📋 Copiado al portapapeles'),
+      () => {
+        // Fallback for restricted clipboard environments (file:// protocol, etc.)
+        const area = document.createElement('textarea');
+        area.style.cssText = 'position:fixed;top:-9999px;left:-9999px';
+        area.value = text;
+        document.body.append(area);
+        area.select();
+        try { document.execCommand('copy'); } catch { /* silent */ }
+        area.remove();
+        showToast('📋 Copiado al portapapeles');
+      },
+    );
+  }
+
+  async function handleClear() {
+    const confirmed = await openConfirmDialog();
+    if (!confirmed) return;
+    tracked.clear();
+    saveTracking();
+    render();
+    showToast('🗑️ Seguimiento limpiado');
+  }
+
+  function handleCart() {
+    const selection = PRODUCTS.filter((p) => tracked.has(productKey(p)));
+    if (selection.length === 0) {
+      showToast('⚠️ Marca productos primero con el checkbox');
+      return;
+    }
+    const valid = selection.filter((p) => p.hasSize78 === true && p.stock === 'available');
+    if (valid.length === 0) {
+      showToast('⚠️ Ningún producto seleccionado tiene talla 7-8 disponible');
+      return;
+    }
+    showToast(`🛒 Abriendo ${valid.length} producto(s) en Hipercor...`);
+    // Open one immediately, queue rest with delay (bypass popup blocker for first)
+    valid.forEach((p, i) => {
+      setTimeout(() => window.open(p.url, '_blank'), i * 400);
+    });
+  }
+
+  /* ===================================================
+   * FILTER NAV
+   * =================================================== */
+  const filterNav = document.getElementById('filterNav');
+
+  /**
+   * Build a single filter button.
+   * @param {string}  label    — display text
+   * @param {string}  value    — category value ('all' or category name)
+   * @param {boolean} isActive
+   * @returns {HTMLButtonElement}
+   */
+  function buildFilterButton(label, value, isActive) {
+    const btn = el('button', {
+      className:    'filter-nav__btn',
+      'aria-pressed': String(isActive),
+      dataset:      { cat: value },
+    });
+    btn.textContent = label;
+    btn.addEventListener('click', () => setFilter(value));
+    return btn;
+  }
+
+  function setupFilters() {
+    const fragment = document.createDocumentFragment();
+    fragment.append(buildFilterButton('📋 Todas', 'all', true));
+    CATEGORIES.forEach((cat) => fragment.append(buildFilterButton(cat, cat, false)));
+    filterNav.replaceChildren(fragment);
+  }
+
+  /**
+   * Update the active filter and re-render.
+   * State lives in the `activeCategory` variable — not in the DOM.
+   * @param {string} category
+   */
+  function setFilter(category) {
+    activeCategory = category;
+    filterNav.querySelectorAll('.filter-nav__btn').forEach((btn) => {
+      btn.setAttribute('aria-pressed', String(btn.dataset.cat === category));
+    });
+    render();
+  }
+
+  /* ===================================================
+   * EVENT WIRING  (no inline handlers in HTML)
+   * =================================================== */
+  document.getElementById('btnExport').addEventListener('click', handleExport);
+  document.getElementById('btnClear').addEventListener('click', handleClear);
+  document.getElementById('btnCart').addEventListener('click', handleCart);
+
+  /* ===================================================
+   * INIT
+   * =================================================== */
+  setupFilters();
   render();
-}
 
-function saveSelection() { saveTracking(tracking); showToast('💾 Guardado'); }
-function clearSelection() { if (confirm('¿Limpiar?')) { tracking={}; saveTracking(tracking); render(); showToast('🗑️ Limpiado'); }}
-
-function exportSelection() {
-  const tracked = ALL_PRODUCTS.filter(p => tracking[p.u]);
-  if (!tracked.length) { showToast('⚠️ No hay seguimiento'); return; }
-  const text = tracked.map(p => `☐ ${p.n} | ${p.p} | ${p.c}\n   ${p.u}`).join('\n');
-  navigator.clipboard.writeText(text).then(() => showToast('📋 Copiado')).catch(() => prompt('Copia:', text));
-}
-
-function setupFilters() {
-  const cats = getCategories();
-  document.getElementById('filters').innerHTML = '<button class="active" data-cat="all" onclick="setFilter(\'all\',this)">📋 Todas</button>' +
-    cats.map(c => `<button data-cat="${c}" onclick="setFilter('${c}',this)">${c}</button>`).join('');
-}
-
-function setFilter(cat, btn) {
-  document.querySelectorAll('.filters button').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  render();
-}
-
-setupFilters();
-render();
+})(); // end IIFE
 </script>
 </body>
 </html>
