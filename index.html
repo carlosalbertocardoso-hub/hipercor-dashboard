@@ -155,6 +155,7 @@
       flex-wrap: wrap;
       margin-bottom: var(--space-xl);
     }
+    .filter-nav + .filter-nav--secondary { margin-top: 6px; }
     .filter-nav__btn {
       padding: var(--space-sm) var(--space-lg);
       border: 1px solid var(--color-border);
@@ -470,8 +471,8 @@
 <a href="#main-content" class="skip-link">Saltar al contenido</a>
 
 <header>
-  <h1>Hipercor — Moda Niña 7-8 Años</h1>
-  <p class="subtitle">Marca los productos para seguimiento · Los cambios se guardan automáticamente</p>
+  <h1>Hipercor — Moda Infantil</h1>
+    <p class="subtitle">👧 Niñas talla 7-8 · 👦 Niños tallas 6 y 9-10 · Marca productos para seguimiento</p>
 </header>
 
 <div class="notice" role="note">
@@ -496,6 +497,19 @@
 </section>
 
 <nav class="filter-nav" id="filterNav" aria-label="Filtrar por categoría"></nav>
+
+<nav class="filter-nav filter-nav--secondary" id="genderFilter" aria-label="Filtrar por género">
+  <button class="filter-nav__btn filter-nav__btn--gender" data-gender="all" aria-pressed="true">👫 Todas</button>
+  <button class="filter-nav__btn filter-nav__btn--gender" data-gender="girl" aria-pressed="false">👧 Niñas</button>
+  <button class="filter-nav__btn filter-nav__btn--gender" data-gender="boy" aria-pressed="false">👦 Niños</button>
+</nav>
+
+<nav class="filter-nav filter-nav--secondary" id="sizeFilter" aria-label="Filtrar por talla">
+  <button class="filter-nav__btn filter-nav__btn--size" data-size="all" aria-pressed="true">📏 Todas</button>
+  <button class="filter-nav__btn filter-nav__btn--size" data-size="6" aria-pressed="false">6 años</button>
+  <button class="filter-nav__btn filter-nav__btn--size" data-size="7-8" aria-pressed="false">7-8 años</button>
+  <button class="filter-nav__btn filter-nav__btn--size" data-size="9-10" aria-pressed="false">9-10 años</button>
+</nav>
 
 <div class="actions" role="toolbar" aria-label="Acciones">
   <button class="btn btn--primary" id="btnCart">
@@ -669,6 +683,8 @@
 
   /** @type {string} Active category filter ('all' | category name) */
   let activeCategory = 'all';
+  let activeGender = 'all';
+  let activeSize = 'all';
 
   /**
    * Category list — derived once since PRODUCTS is a static constant.
@@ -964,10 +980,11 @@
   const grid = document.getElementById('productGrid');
 
   function getFiltered() {
-    return activeCategory === 'all'
-      ? PRODUCTS
-      : PRODUCTS.filter((p) => p.category === activeCategory);
-  }
+      let filtered = activeCategory === 'all' ? PRODUCTS : PRODUCTS.filter((p) => p.category === activeCategory);
+      if (activeGender !== 'all') filtered = filtered.filter((p) => p.gender === activeGender);
+      if (activeSize !== 'all') filtered = filtered.filter((p) => p.sizes && p.sizes.includes(activeSize));
+      return filtered;
+    }
 
   function updateStats() {
     document.getElementById('totalCount').textContent    = PRODUCTS.length;
@@ -1099,11 +1116,27 @@
   }
 
   function setupFilters() {
-    const fragment = document.createDocumentFragment();
-    fragment.append(buildFilterButton('📋 Todas', 'all', true));
-    CATEGORIES.forEach((cat) => fragment.append(buildFilterButton(cat, cat, false)));
-    filterNav.replaceChildren(fragment);
-  }
+      const fragment = document.createDocumentFragment();
+      fragment.append(buildFilterButton('📋 Todas', 'all', true));
+      CATEGORIES.forEach((cat) => fragment.append(buildFilterButton(cat, cat, false)));
+      filterNav.replaceChildren(fragment);
+    }
+
+    function setGender(value) {
+      activeGender = value;
+      document.querySelectorAll('#genderFilter .filter-nav__btn').forEach((btn) => {
+        btn.setAttribute('aria-pressed', String(btn.dataset.gender === value));
+      });
+      render();
+    }
+
+    function setSize(value) {
+      activeSize = value;
+      document.querySelectorAll('#sizeFilter .filter-nav__btn').forEach((btn) => {
+        btn.setAttribute('aria-pressed', String(btn.dataset.size === value));
+      });
+      render();
+    }
 
   /**
    * Update the active filter and re-render.
@@ -1122,8 +1155,15 @@
    * EVENT WIRING  (no inline handlers in HTML)
    * =================================================== */
   document.getElementById('btnExport').addEventListener('click', handleExport);
-  document.getElementById('btnClear').addEventListener('click', handleClear);
-  document.getElementById('btnCart').addEventListener('click', handleCart);
+    document.getElementById('btnClear').addEventListener('click', handleClear);
+    document.getElementById('btnCart').addEventListener('click', handleCart);
+
+    document.querySelectorAll('#genderFilter .filter-nav__btn').forEach(btn =>
+      btn.addEventListener('click', () => setGender(btn.dataset.gender))
+    );
+    document.querySelectorAll('#sizeFilter .filter-nav__btn').forEach(btn =>
+      btn.addEventListener('click', () => setSize(btn.dataset.size))
+    );
 
     /* ===================================================
    * INIT
