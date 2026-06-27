@@ -29,6 +29,10 @@
   .product-card .brand { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #999; margin-bottom: 2px; }
   .product-card .name { font-size: 13px; font-weight: 500; line-height: 1.3; margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .product-card .price { font-size: 16px; font-weight: 700; }
+  .talla-badge { display: inline-block; margin-top: 5px; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 700; letter-spacing: .3px; }
+  .talla-badge.ok { background: #2e7d32; color: #fff; }
+  .talla-badge.agotado { background: #c62828; color: #fff; }
+  .talla-badge.pendiente { background: #ef6c00; color: #fff; }
 
   /* Tags */
   .cat-tag { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.6); color: white; font-size: 10px; padding: 2px 8px; border-radius: 10px; z-index: 1; }
@@ -167,11 +171,11 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2000);
 }
 
-function tallaLabel(p) {
-  if (p.t78 === 'SI' && p.stk === 'ok') return '<span class="talla-tag ok">✅ 7-8</span>';
-  if (p.t78 === 'SI' && p.stk === 'agotado') return '<span class="talla-tag agotado">❌ 7-8 agotado</span>';
-  if (p.t78 === '?') return '<span class="talla-tag no">🔍 Pendiente</span>';
-  if (p.t78 === 'NO') return '<span class="talla-tag no">❌ No 7-8</span>';
+function tallaBadge(p) {
+  if (p.t78 === 'SI' && p.stk === 'ok') return '<div class="talla-badge ok">✅ 7-8</div>';
+  if (p.t78 === 'SI' && p.stk === 'agotado') return '<div class="talla-badge agotado">❌ 7-8 agotado</div>';
+  if (p.t78 === '?') return '<div class="talla-badge pendiente">🔍 Pendiente</div>';
+  if (p.t78 === 'NO') return '<div class="talla-badge agotado">❌ No 7-8</div>';
   return '';
 }
 
@@ -198,7 +202,6 @@ function render() {
     const imgHtml = p.i ? `<img src="${p.i}" alt="${p.n}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'no-img\\'>👗</div>'">` : '<div class="no-img">👗</div>';
     return `<div class="product-card ${trackedClass}" data-url="${p.u}">
       <span class="cat-tag">${p.c}</span>
-      ${tallaLabel(p)}
       <div class="checkbox-wrap"><input type="checkbox" ${checked} onchange="toggleTrack('${p.u.replace(/'/g,"\\'")}')"></div>
       <a href="${p.u}" target="_blank" class="product-link">
         <div class="img-wrap">${imgHtml}</div>
@@ -206,6 +209,7 @@ function render() {
           <div class="brand">${p.b}</div>
           <div class="name">${p.n}</div>
           <div class="price">${p.p}</div>
+          ${tallaBadge(p)}
           ${stockStatus(p)}
         </div>
       </a>
