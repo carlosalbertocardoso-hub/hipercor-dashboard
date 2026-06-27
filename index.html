@@ -1043,10 +1043,9 @@
       return;
     }
     showToast(`🛒 Abriendo ${valid.length} producto(s) en Hipercor...`);
-    // Open one immediately, queue rest with delay (bypass popup blocker for first)
-    valid.forEach((p, i) => {
-      setTimeout(() => window.open(p.url, '_blank'), i * 400);
-    });
+    // Open all synchronously — browsers allow the first 1-2, remaining
+    // will show a "popups blocked" prompt where user can allow them.
+    valid.forEach((p) => window.open(p.url, '_blank'));
   }
 
   /* ===================================================
