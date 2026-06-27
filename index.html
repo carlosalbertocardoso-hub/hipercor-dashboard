@@ -9,32 +9,37 @@
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; color: #333; padding: 20px; }
   h1 { font-size: 24px; margin-bottom: 5px; }
   .subtitle { color: #666; margin-bottom: 20px; font-size: 14px; }
+  .warning { background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; font-size: 13px; color: #856404; }
   .stats { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 20px; }
   .stat-card { background: white; border-radius: 12px; padding: 15px 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); flex: 1; min-width: 120px; }
   .stat-card .num { font-size: 28px; font-weight: 700; color: #1a1a1a; }
+  .stat-card .num.green { color: #4CAF50; }
   .stat-card .label { font-size: 12px; color: #888; margin-top: 2px; }
-  .stat-card.tracking { border-left: 4px solid #4CAF50; }
   .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
   .filters button { padding: 8px 16px; border: 1px solid #ddd; border-radius: 20px; background: white; cursor: pointer; font-size: 13px; transition: all .2s; }
   .filters button:hover { border-color: #999; }
   .filters button.active { background: #1a1a1a; color: white; border-color: #1a1a1a; }
-  .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+  .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
   .product-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: box-shadow .2s, transform .2s; position: relative; }
   .product-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.12); transform: translateY(-2px); }
-  .product-card .img-wrap { width: 100%; aspect-ratio: 0.8; background: #f0f0f0; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
-  .product-card .img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: opacity .3s; }
-  .product-card .img-wrap img[src=""] { display: none; }
+  .product-card .img-wrap { width: 100%; aspect-ratio: 0.8; background: #f0f0f0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .product-card .img-wrap img { width: 100%; height: 100%; object-fit: cover; }
   .product-card .img-wrap .no-img { color: #ccc; font-size: 40px; }
   .product-card .info { padding: 10px 12px 12px; }
   .product-card .brand { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #999; margin-bottom: 2px; }
   .product-card .name { font-size: 13px; font-weight: 500; line-height: 1.3; margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-  .product-card .price { font-size: 16px; font-weight: 700; color: #1a1a1a; }
-  .product-card .cat-tag { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.6); color: white; font-size: 10px; padding: 2px 8px; border-radius: 10px; }
-  .product-card .checkbox-wrap { position: absolute; top: 8px; right: 8px; z-index: 2; }
-  .product-card .checkbox-wrap input[type="checkbox"] { width: 22px; height: 22px; border-radius: 50%; cursor: pointer; accent-color: #4CAF50; }
+  .product-card .price { font-size: 16px; font-weight: 700; }
+
+  /* Tags */
+  .cat-tag { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.6); color: white; font-size: 10px; padding: 2px 8px; border-radius: 10px; z-index: 1; }
+  .talla-tag { position: absolute; top: 8px; right: 36px; font-size: 11px; padding: 2px 8px; border-radius: 10px; z-index: 1; font-weight: 600; }
+  .talla-tag.ok { background: #4CAF50; color: white; }
+  .talla-tag.no { background: #ff9800; color: white; }
+  .talla-tag.agotado { background: #f44336; color: white; }
+  .checkbox-wrap { position: absolute; top: 8px; right: 8px; z-index: 2; }
+  .checkbox-wrap input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-color: #4CAF50; }
   .product-card.tracked { outline: 2px solid #4CAF50; outline-offset: -2px; }
-  .product-card.tracked .checkbox-wrap label { background: #4CAF50; }
-  .product-card .tracked-badge { display: none; position: absolute; bottom: 8px; right: 8px; background: #4CAF50; color: white; font-size: 10px; padding: 2px 8px; border-radius: 10px; }
+  .product-card .tracked-badge { display: none; position: absolute; bottom: 8px; right: 8px; background: #4CAF50; color: white; font-size: 10px; padding: 2px 8px; border-radius: 10px; z-index: 1; }
   .product-card.tracked .tracked-badge { display: block; }
   .empty-state { text-align: center; padding: 60px 20px; color: #999; }
   .empty-state .icon { font-size: 60px; margin-bottom: 15px; }
@@ -48,16 +53,24 @@
   .btn-danger:hover { background: #cc0000; }
   .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 12px 24px; border-radius: 8px; font-size: 14px; opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 100; }
   .toast.show { opacity: 1; }
+  .price.old { font-size: 11px; color: #999; text-decoration: line-through; font-weight: 400; margin-right: 4px; }
+  .stock-status { font-size: 11px; margin-top: 2px; }
+  .stock-status.available { color: #4CAF50; }
+  .stock-status.agotado { color: #f44336; }
+  a.product-link { color: inherit; text-decoration: none; }
   @media (max-width: 600px) { .product-grid { grid-template-columns: repeat(2, 1fr); } }
 </style>
 </head>
 <body>
 
 <h1>👗 Hipercor — Moda Niña 7-8 Años</h1>
-<p class="subtitle">Marca los productos que quieres seguir. Te avisaré cuando cambien.</p>
+<p class="subtitle">✅ Marca los productos para seguimiento • El dashboard se guarda automáticamente en tu navegador</p>
+
+<div class="warning">⚠️ El filtro de talla 7-8 de Hipercor no funciona correctamente. Muchos productos tienen la talla disponible aunque el filtro no los muestre. Este dashboard muestra los productos que hemos verificado manualmente.</div>
 
 <div class="stats">
   <div class="stat-card"><div class="num" id="totalCount">0</div><div class="label">Productos totales</div></div>
+  <div class="stat-card"><div class="num" id="withTalla78">0</div><div class="label">Con talla 7-8 ✅</div></div>
   <div class="stat-card tracking"><div class="num" id="trackingCount">0</div><div class="label">En seguimiento</div></div>
 </div>
 
@@ -65,361 +78,71 @@
 
 <div class="actions">
   <button class="btn-primary" onclick="saveSelection()">💾 Guardar selección</button>
-  <button class="btn-secondary" onclick="clearSelection()">🗑️ Limpiar selección</button>
-  <button class="btn-secondary" onclick="exportSelection()">📤 Exportar seguimiento</button>
+  <button class="btn-secondary" onclick="clearSelection()">🗑️ Limpiar</button>
+  <button class="btn-secondary" onclick="exportSelection()">📤 Exportar</button>
 </div>
 
 <div class="product-grid" id="productGrid"></div>
 <div id="toast" class="toast"></div>
 
 <script>
-// ===== PRODUCT DATA =====
 const ALL_PRODUCTS = [
-  // PANTALONES Y PETOS
-  {
-    name: "Peto de rayas family",
-    category: "Pantalones y petos",
-    price: "13,30€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A56208017-peto-de-rayas-family/?parentCategoryId=5004.3283503022&color=Naranja+quemado",
-    img: "https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/14/00103685301867____5__967x1200.jpg",
-    brand: "Unit"
-  },
-  {
-    name: "Peto Vichy Seersucker",
-    category: "Pantalones y petos",
-    price: "13,30€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A56207985-peto-vichy-seersucker/?parentCategoryId=5004.3283503022&color=Negro",
-    img: "https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/14/00103685301859____6__967x1200.jpg",
-    brand: "Unit"
-  },
-  {
-    name: "Peto niña largo denim",
-    category: "Pantalones y petos",
-    price: "13,30€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A56114831-peto-nina-largo-denim/?parentCategoryId=5004.3283503022&color=Gris+oscuro",
-    img: "https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/06/00103685301735____2__967x1200.jpg",
-    brand: "Unit"
-  },
-  {
-    name: "Pantalón niña carpintero",
-    category: "Pantalones y petos",
-    price: "~15€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A56130245-pantalon-nina-carpintero/?parentCategoryId=5004.52669861022&color=Blanco+roto",
-    img: "",
-    brand: "Unit"
-  },
-  {
-    name: "Peto niña largo de lino",
-    category: "Pantalones y petos",
-    price: "~15€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A56130395-peto-nina-largo-de-lino/?parentCategoryId=5004.52669861022&color=230+Rosa+oscuro",
-    img: "",
-    brand: "Unit"
-  },
-  {
-    name: "Short niña de lino estampado",
-    category: "Pantalones y petos",
-    price: "~15€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A56255691-short-nina-de-lino-estampado/?parentCategoryId=5004.52669861022&color=660+Naranja",
-    img: "",
-    brand: "Unit"
-  },
-  // VESTIDOS
-  {
-    name: "Vestido niña de lino con bordados (Carmín)",
-    category: "Vestidos",
-    price: "16,80€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A55982328-vestido-nina-de-lino-con-bordados-en-el-cuello/?parentCategoryId=5004.3283503022&color=610+Carm%C3%ADn",
-    img: "https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202510/20/00103688103476____6__967x1200.jpg",
-    brand: "Unit"
-  },
-  {
-    name: "Vestido niña de lino con bordados (Gris)",
-    category: "Vestidos",
-    price: "16,80€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A55982295-vestido-nina-de-lino-con-bordados-en-el-cuello/?parentCategoryId=5004.3283503022&color=Gris+claro",
-    img: "https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202510/17/00103688103468____1__967x1200.jpg",
-    brand: "Unit"
-  },
-  {
-    name: "Vestido niña doble gasa estampado (Azul)",
-    category: "Vestidos",
-    price: "16,80€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A56012569-vestido-nina-de-doble-gasa-estampado/?parentCategoryId=5004.3283503022&color=Azul+p%C3%A1lido",
-    img: "https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/06/00103688103526____2__967x1200.jpg",
-    brand: "Unit"
-  },
-  {
-    name: "Vestido niña doble gasa estampado (Verde)",
-    category: "Vestidos",
-    price: "16,80€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A56012594-vestido-nina-de-doble-gasa-estampado/?parentCategoryId=5004.3283503022&color=530+Verde+oscuro",
-    img: "https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/06/00103688103534____2__967x1200.jpg",
-    brand: "Unit"
-  },
-  {
-    name: "Vestido niña gasa cuadros vichy (Oliva)",
-    category: "Vestidos",
-    price: "~16,80€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A56012611-vestido-nina-de-gasa-de-cuadros-vichy/?parentCategoryId=5004.52689046022&color=560+Oliva",
-    img: "",
-    brand: "Unit"
-  },
-  {
-    name: "Vestido niña schiffli",
-    category: "Vestidos",
-    price: "~16,80€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A56369559-vestido-nina-schiffli/?parentCategoryId=5004.52689046022&color=Blanco",
-    img: "",
-    brand: "Unit"
-  },
-  {
-    name: "Vestido niña con smock",
-    category: "Vestidos",
-    price: "~16,80€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A56255718-vestido-nina-con-smock/?parentCategoryId=5004.52689046022&color=Jab%C3%B3n",
-    img: "",
-    brand: "Unit"
-  },
-  {
-    name: "Vestido niña camisero rayas (Rosa)",
-    category: "Vestidos",
-    price: "~16,80€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A56235352-vestido-nina-camisero-rayas/?parentCategoryId=5004.52689046022&color=230+Rosa+oscuro",
-    img: "",
-    brand: "Unit"
-  },
-  {
-    name: "Vestido niña de rayas (Fucsia)",
-    category: "Vestidos",
-    price: "~16,80€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A56324610-vestido-nina-de-rayas/?parentCategoryId=5004.52689046022&color=240+Fucsia",
-    img: "",
-    brand: "Unit"
-  },
-  // CAMISETAS Y POLOS
-  {
-    name: "Camiseta niña cuello de crochét",
-    category: "Camisetas",
-    price: "~15€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A56215017-camiseta-nina-con-cuello-de-crochet/?parentCategoryId=5004.52669857022&color=Blanco+roto",
-    img: "",
-    brand: "Unit"
-  },
-  {
-    name: "Camiseta niña cuello doble",
-    category: "Camisetas",
-    price: "~15€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A56215091-camiseta-nina-con-cuello-doble/?parentCategoryId=5004.52669857022&color=Blanco",
-    img: "",
-    brand: "Unit"
-  },
-  {
-    name: "Camiseta niña con volante de gasa",
-    category: "Camisetas",
-    price: "~15€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A56191468-camiseta-nina-con-volante-de-gasa/?parentCategoryId=5004.52669857022&color=230+Rosa+oscuro",
-    img: "",
-    brand: "Unit"
-  },
-  {
-    name: "Camiseta niña punto de cruz (Verde)",
-    category: "Camisetas",
-    price: "~15€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A56197651-camiseta-nina-punto-de-cruz/?parentCategoryId=5004.52669857022&color=Verde+Pato",
-    img: "",
-    brand: "Unit"
-  },
-  {
-    name: "Camiseta niña punto de cruz (Blanco)",
-    category: "Camisetas",
-    price: "~15€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A56197635-camiseta-nina-punto-de-cruz/?parentCategoryId=5004.52669857022&color=Blanco",
-    img: "",
-    brand: "Unit"
-  },
-  // BLUSAS
-  {
-    name: "Blusa niña con cuello flor",
-    category: "Blusas",
-    price: "15€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A55982328-vestido-nina-de-lino-con-bordados-en-el-cuello/?parentCategoryId=5004.52689046022&color=610+Carm%C3%ADn",
-    img: "",
-    brand: "Unit"
-  },
-  {
-    name: "Blusa niña con bordados",
-    category: "Blusas",
-    price: "17€",
-    url: "https://www.hipercor.es/moda-y-accesorios/?parentCategoryId=5004.52689046022",
-    img: "",
-    brand: "Unit"
-  },
-  // FALDAS
-  {
-    name: "Falda niña con bordados",
-    category: "Faldas",
-    price: "~15€",
-    url: "https://www.hipercor.es/moda-y-accesorios/?parentCategoryId=5004.52689046022",
-    img: "",
-    brand: "Unit"
-  },
-  {
-    name: "Falda niña vaquera (Crudo)",
-    category: "Faldas",
-    price: "~15€",
-    url: "https://www.hipercor.es/moda-y-accesorios/?parentCategoryId=5004.52689046022",
-    img: "",
-    brand: "Unit"
-  },
-  {
-    name: "Falda niña vaquera (Petróleo)",
-    category: "Faldas",
-    price: "~15€",
-    url: "https://www.hipercor.es/moda-y-accesorios/?parentCategoryId=5004.52689046022",
-    img: "",
-    brand: "Unit"
-  },
-  {
-    name: "Falda niña colegial (Azul marino)",
-    category: "Faldas",
-    price: "~15€",
-    url: "https://www.hipercor.es/moda-y-accesorios/?parentCategoryId=5004.52689046022",
-    img: "",
-    brand: "Unit"
-  },
-  // PIJAMAS
-  {
-    name: "Pijama niña con tirantes (Blanco)",
-    category: "Pijamas",
-    price: "~15€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A56395890-pijama-de-nina-con-tirantes/?parentCategoryId=5004.3283503022&color=Blanco+roto",
-    img: "https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202601/27/00198481004368____3__967x1200.jpg",
-    brand: "Unit"
-  },
-  {
-    name: "Pijama niña con tirantes (Azul)",
-    category: "Pijamas",
-    price: "~15€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A56395902-pijama-de-nina-con-tirantes/?parentCategoryId=5004.3283503022&color=410+Azul+claro",
-    img: "https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202601/27/00198481004376____2__967x1200.jpg",
-    brand: "Unit"
-  },
-  {
-    name: "Pijama niña popelin corto",
-    category: "Pijamas",
-    price: "~15€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A56131783-pijama-de-nina-popelin-corto/?parentCategoryId=5004.3283503022&color=Blanco+roto",
-    img: "https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/18/00198481004327____2__967x1200.jpg",
-    brand: "Unit"
-  },
-  {
-    name: "Pijama niña gasa corto estampado",
-    category: "Pijamas",
-    price: "~15€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A56024427-pijama-de-nina-de-gasa-corto-estampado/?parentCategoryId=5004.3283503022&color=Blanco+roto",
-    img: "https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/09/00198481004277____3__967x1200.jpg",
-    brand: "Unit"
-  },
-  // BAÑO
-  {
-    name: "Bikini niña volante flores",
-    category: "Baño",
-    price: "15€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A56322579-bikini-nina-volante-flores/?parentCategoryId=5004.52689152022&color=Blanco+roto",
-    img: "",
-    brand: "Unit"
-  },
-  {
-    name: "Bañador niña volante indio",
-    category: "Baño",
-    price: "15€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A56506050-banador-nina-volante-indio/?parentCategoryId=5004.52689152022&color=400+Azul",
-    img: "",
-    brand: "Unit"
-  },
-  {
-    name: "Bañador niña lazos flor (Fucsia)",
-    category: "Baño",
-    price: "15€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A56319884-banador-nina-lazos-flor/?parentCategoryId=5004.52689152022&color=240+Fucsia",
-    img: "",
-    brand: "Unit"
-  },
-  {
-    name: "Bañador niña volante y lazos flores",
-    category: "Baño",
-    price: "15€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A56220891-banador-nina-volante-y-lazos-flores/?parentCategoryId=5004.52689152022&color=Verde+Pato",
-    img: "",
-    brand: "Unit"
-  },
-  {
-    name: "Bañador niña nudos y rayas",
-    category: "Baño",
-    price: "15€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A56320014-banador-nina-nudos-y-rayas/?parentCategoryId=5004.52689152022&color=Verde",
-    img: "",
-    brand: "Unit"
-  },
-  {
-    name: "Kaftan niña bordado (Fucsia)",
-    category: "Baño",
-    price: "17€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A56796926-kaftan-de-nina-bordado/?parentCategoryId=5004.52689152022&color=240+Fucsia",
-    img: "",
-    brand: "Unit"
-  },
-  // SUDADERAS
-  {
-    name: "Sudadera niña cuello caja (Salmón)",
-    category: "Sudaderas",
-    price: "~15€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A55982048-sudadera-nina-cuello-caja/?parentCategoryId=5004.52689047022&color=260+Salm%C3%B3n",
-    img: "",
-    brand: "Unit"
-  },
-  {
-    name: "Sudadera niña cuello caja (Malva)",
-    category: "Sudaderas",
-    price: "~15€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A55982098-sudadera-nina-cuello-caja/?parentCategoryId=5004.52689047022&color=282+Malva",
-    img: "",
-    brand: "Unit"
-  },
-  {
-    name: "Sudadera niña rayas (Verde Pato)",
-    category: "Sudaderas",
-    price: "~15€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A55982173-sudadera-nina-rayas/?parentCategoryId=5004.52689047022&color=Verde+Pato",
-    img: "",
-    brand: "Unit"
-  },
-  // CHAQUETAS
-  {
-    name: "Chaqueta niña cuello volante (Crudo)",
-    category: "Chaquetas",
-    price: "~15€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A56110049-chaqueta-nina-cuello-volante/?parentCategoryId=5004.52669812022&color=120+Crudo",
-    img: "",
-    brand: "Unit"
-  },
-  {
-    name: "Chaqueta niña cuello blusa (Azul marino)",
-    category: "Chaquetas",
-    price: "~15€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A57741083-chaqueta-nina-cuello-blusa/?parentCategoryId=5004.52669812022&color=Azul+marino",
-    img: "",
-    brand: "Unit"
-  },
-  {
-    name: "Chaleco niña abertura (Crudo)",
-    category: "Chaquetas",
-    price: "~15€",
-    url: "https://www.hipercor.es/moda-y-accesorios/A57547555-chaleco-nina-abertura/?parentCategoryId=5004.52669812022&color=120+Crudo",
-    img: "",
-    brand: "Unit"
-  }
+  // ===== PANTALONES Y PETOS =====
+  {n:"Peto de rayas family",c:"Pantalones",p:"13,30€",u:"https://www.hipercor.es/moda-y-accesorios/A56208017-peto-de-rayas-family/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/14/00103685301867____5__967x1200.jpg",b:"Unit",t78:"?",stk:""},
+  {n:"Peto Vichy Seersucker",c:"Pantalones",p:"13,30€",u:"https://www.hipercor.es/moda-y-accesorios/A56207985-peto-vichy-seersucker/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202602/14/00103685301859____6__967x1200.jpg",b:"Unit",t78:"?",stk:""},
+  {n:"Peto niña largo denim",c:"Pantalones",p:"13,30€",u:"https://www.hipercor.es/moda-y-accesorios/A56114831-peto-nina-largo-denim/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/06/00103685301735____2__967x1200.jpg",b:"Unit",t78:"SI",stk:"agotado"},
+  {n:"Pantalón niña carpintero",c:"Pantalones",p:"11,90€",u:"https://www.hipercor.es/moda-y-accesorios/A56130245-pantalon-nina-carpintero/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/17/00103685301800____3__967x1200.jpg",b:"Unit",t78:"SI",stk:"ok"},
+  {n:"Peto niña largo de lino",c:"Pantalones",p:"13,30€",u:"https://www.hipercor.es/moda-y-accesorios/A56130395-peto-nina-largo-de-lino/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/11/00103685301818____1__967x1200.jpg",b:"Unit",t78:"SI",stk:"agotado"},
+  {n:"Short niña lino estampado",c:"Pantalones",p:"14€",u:"https://www.hipercor.es/moda-y-accesorios/A56255691-short-nina-de-lino-estampado/",i:"",b:"Unit",t78:"SI",stk:"ok"},
+  
+  // ===== VESTIDOS =====
+  {n:"Vestido lino bordados (Carmín)",c:"Vestidos",p:"16,80€",u:"https://www.hipercor.es/moda-y-accesorios/A55982328-vestido-nina-de-lino-con-bordados-en-el-cuello/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202510/20/00103688103476____6__967x1200.jpg",b:"Unit",t78:"SI",stk:"ok"},
+  {n:"Vestido lino bordados (Gris claro)",c:"Vestidos",p:"16,80€",u:"https://www.hipercor.es/moda-y-accesorios/A55982295-vestido-nina-de-lino-con-bordados-en-el-cuello/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202510/17/00103688103468____1__967x1200.jpg",b:"Unit",t78:"SI",stk:"ok"},
+  {n:"Vestido doble gasa (Azul pálido)",c:"Vestidos",p:"16,80€",u:"https://www.hipercor.es/moda-y-accesorios/A56012569-vestido-nina-de-doble-gasa-estampado/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202511/06/00103688103526____2__967x1200.jpg",b:"Unit",t78:"SI",stk:"ok"},
+  {n:"Vestido doble gasa (Verde oscuro)",c:"Vestidos",p:"16,80€",u:"https://www.hipercor.es/moda-y-accesorios/A56012594-vestido-nina-de-doble-gasa-estampado/",i:"",b:"Unit",t78:"SI",stk:"agotado"},
+  {n:"Vestido gasa vichy (Oliva)",c:"Vestidos",p:"16,80€",u:"https://www.hipercor.es/moda-y-accesorios/A56012611-vestido-nina-de-gasa-de-cuadros-vichy/",i:"",b:"Unit",t78:"?",stk:""},
+  {n:"Vestido schiffli (Blanco)",c:"Vestidos",p:"16,80€",u:"https://www.hipercor.es/moda-y-accesorios/A56369559-vestido-nina-schiffli/",i:"",b:"Unit",t78:"?",stk:""},
+  {n:"Vestido con smock (Jabón)",c:"Vestidos",p:"16,80€",u:"https://www.hipercor.es/moda-y-accesorios/A56255718-vestido-nina-con-smock/",i:"",b:"Unit",t78:"?",stk:""},
+  {n:"Vestido camisero rayas (Rosa)",c:"Vestidos",p:"16,80€",u:"https://www.hipercor.es/moda-y-accesorios/A56235352-vestido-nina-camisero-rayas/",i:"",b:"Unit",t78:"?",stk:""},
+  {n:"Vestido rayas (Fucsia)",c:"Vestidos",p:"16,80€",u:"https://www.hipercor.es/moda-y-accesorios/A56324610-vestido-nina-de-rayas/",i:"",b:"Unit",t78:"?",stk:""},
+
+  // ===== CAMISETAS =====
+  {n:"Camiseta cuello crochét",c:"Camisetas",p:"~15€",u:"https://www.hipercor.es/moda-y-accesorios/A56215017-camiseta-nina-con-cuello-de-crochet/",i:"",b:"Unit",t78:"?",stk:""},
+  {n:"Camiseta cuello doble (Blanco)",c:"Camisetas",p:"~15€",u:"https://www.hipercor.es/moda-y-accesorios/A56215091-camiseta-nina-con-cuello-doble/",i:"",b:"Unit",t78:"?",stk:""},
+  {n:"Camiseta volante gasa (Rosa)",c:"Camisetas",p:"~15€",u:"https://www.hipercor.es/moda-y-accesorios/A56191468-camiseta-nina-con-volante-de-gasa/",i:"",b:"Unit",t78:"?",stk:""},
+  {n:"Camiseta punto de cruz (Verde)",c:"Camisetas",p:"~15€",u:"https://www.hipercor.es/moda-y-accesorios/A56197651-camiseta-nina-punto-de-cruz/",i:"",b:"Unit",t78:"?",stk:""},
+  {n:"Camiseta cuello crochét (Amarillo)",c:"Camisetas",p:"~15€",u:"https://www.hipercor.es/moda-y-accesorios/A56215074-camiseta-nina-con-cuello-de-crochet/",i:"",b:"Unit",t78:"?",stk:""},
+
+  // ===== BLUSAS =====
+  {n:"Blusa niña cuello flor",c:"Blusas",p:"15€",u:"https://www.hipercor.es/moda-y-accesorios/?parentCategoryId=5004.52689046022",i:"",b:"Unit",t78:"?",stk:""},
+  {n:"Blusa niña abierta lino set",c:"Blusas",p:"15€",u:"https://www.hipercor.es/moda-y-accesorios/?parentCategoryId=5004.52689046022",i:"",b:"Unit",t78:"?",stk:""},
+
+  // ===== FALDAS =====
+  {n:"Falda niña con bordados",c:"Faldas",p:"~15€",u:"https://www.hipercor.es/moda-y-accesorios/?parentCategoryId=5004.52689046022",i:"",b:"Unit",t78:"?",stk:""},
+  {n:"Falda niña vaquera (Crudo)",c:"Faldas",p:"~15€",u:"https://www.hipercor.es/moda-y-accesorios/?parentCategoryId=5004.52689046022",i:"",b:"Unit",t78:"?",stk:""},
+  {n:"Falda niña colegial (Azul)",c:"Faldas",p:"~15€",u:"https://www.hipercor.es/moda-y-accesorios/?parentCategoryId=5004.52689046022",i:"",b:"Unit",t78:"?",stk:""},
+
+  // ===== PIJAMAS =====
+  {n:"Pijama tirantes (Blanco roto)",c:"Pijamas",p:"~15€",u:"https://www.hipercor.es/moda-y-accesorios/A56395890-pijama-de-nina-con-tirantes/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202601/27/00198481004368____3__967x1200.jpg",b:"Unit",t78:"?",stk:""},
+  {n:"Pijama tirantes (Azul claro)",c:"Pijamas",p:"~15€",u:"https://www.hipercor.es/moda-y-accesorios/A56395902-pijama-de-nina-con-tirantes/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202601/27/00198481004376____2__967x1200.jpg",b:"Unit",t78:"?",stk:""},
+  {n:"Pijama popelin corto (Blanco)",c:"Pijamas",p:"~15€",u:"https://www.hipercor.es/moda-y-accesorios/A56131783-pijama-de-nina-popelin-corto/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/18/00198481004327____2__967x1200.jpg",b:"Unit",t78:"?",stk:""},
+  {n:"Pijama gasa corto estampado",c:"Pijamas",p:"~15€",u:"https://www.hipercor.es/moda-y-accesorios/A56024427-pijama-de-nina-de-gasa-corto-estampado/",i:"https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202512/09/00198481004277____3__967x1200.jpg",b:"Unit",t78:"?",stk:""},
+
+  // ===== BAÑO =====
+  {n:"Bikini volante flores",c:"Baño",p:"15€",u:"https://www.hipercor.es/moda-y-accesorios/A56322579-bikini-nina-volante-flores/",i:"",b:"Unit",t78:"?",stk:""},
+  {n:"Bañador volante indio",c:"Baño",p:"15€",u:"https://www.hipercor.es/moda-y-accesorios/A56506050-banador-nina-volante-indio/",i:"",b:"Unit",t78:"?",stk:""},
+  {n:"Bañador lazos flor (Fucsia)",c:"Baño",p:"15€",u:"https://www.hipercor.es/moda-y-accesorios/A56319884-banador-nina-lazos-flor/",i:"",b:"Unit",t78:"?",stk:""},
+  {n:"Kaftan bordado (Fucsia)",c:"Baño",p:"17€",u:"https://www.hipercor.es/moda-y-accesorios/A56796926-kaftan-de-nina-bordado/",i:"",b:"Unit",t78:"?",stk:""},
+
+  // ===== SUDADERAS =====
+  {n:"Sudadera cuello caja (Salmón)",c:"Sudaderas",p:"~15€",u:"https://www.hipercor.es/moda-y-accesorios/A55982048-sudadera-nina-cuello-caja/",i:"",b:"Unit",t78:"?",stk:""},
+  {n:"Sudadera cuello caja (Malva)",c:"Sudaderas",p:"~15€",u:"https://www.hipercor.es/moda-y-accesorios/A55982098-sudadera-nina-cuello-caja/",i:"",b:"Unit",t78:"?",stk:""},
+  {n:"Sudadera rayas (Verde Pato)",c:"Sudaderas",p:"~15€",u:"https://www.hipercor.es/moda-y-accesorios/A55982173-sudadera-nina-rayas/",i:"",b:"Unit",t78:"?",stk:""},
+
+  // ===== CHAQUETAS =====
+  {n:"Chaqueta cuello volante (Crudo)",c:"Chaquetas",p:"~15€",u:"https://www.hipercor.es/moda-y-accesorios/A56110049-chaqueta-nina-cuello-volante/",i:"",b:"Unit",t78:"?",stk:""},
+  {n:"Chaqueta cuello blusa (Azul)",c:"Chaquetas",p:"~15€",u:"https://www.hipercor.es/moda-y-accesorios/A57741083-chaqueta-nina-cuello-blusa/",i:"",b:"Unit",t78:"?",stk:""},
+  {n:"Chaleco abertura (Crudo)",c:"Chaquetas",p:"~15€",u:"https://www.hipercor.es/moda-y-accesorios/A57547555-chaleco-nina-abertura/",i:"",b:"Unit",t78:"?",stk:""},
 ];
 
 // ===== APP =====
@@ -428,16 +151,13 @@ const STORAGE_KEY = 'hipercor_tracking';
 function loadTracking() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; }
 }
-
 function saveTracking(data) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
-
 let tracking = loadTracking();
 
 function getCategories() {
-  const cats = [...new Set(ALL_PRODUCTS.map(p => p.category))];
-  return cats;
+  return [...new Set(ALL_PRODUCTS.map(p => p.c))];
 }
 
 function showToast(msg) {
@@ -447,96 +167,78 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2000);
 }
 
+function tallaLabel(p) {
+  if (p.t78 === 'SI' && p.stk === 'ok') return '<span class="talla-tag ok">✅ 7-8</span>';
+  if (p.t78 === 'SI' && p.stk === 'agotado') return '<span class="talla-tag agotado">❌ 7-8 agotado</span>';
+  if (p.t78 === '?') return '<span class="talla-tag no">🔍 Pendiente</span>';
+  if (p.t78 === 'NO') return '<span class="talla-tag no">❌ No 7-8</span>';
+  return '';
+}
+
+function stockStatus(p) {
+  if (p.stk === 'ok') return '<div class="stock-status available">✅ En stock</div>';
+  if (p.stk === 'agotado') return '<div class="stock-status agotado">❌ Agotado</div>';
+  return '';
+}
+
 function render() {
   const activeCat = document.querySelector('.filters .active')?.dataset?.cat || 'all';
   const grid = document.getElementById('productGrid');
   let filtered = ALL_PRODUCTS;
-  if (activeCat !== 'all') {
-    filtered = ALL_PRODUCTS.filter(p => p.category === activeCat);
-  }
-  
+  if (activeCat !== 'all') filtered = ALL_PRODUCTS.filter(p => p.c === activeCat);
+
   if (filtered.length === 0) {
-    grid.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>No hay productos en esta categoría</p></div>';
+    grid.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>No hay productos</p></div>';
     return;
   }
 
-  grid.innerHTML = filtered.map((p, i) => {
-    const id = p.url.split('/A')[1]?.split('/')[0] || 'p' + i;
-    const checked = tracking[p.url] ? 'checked' : '';
-    const trackedClass = tracking[p.url] ? 'tracked' : '';
-    const imgHtml = p.img ? `<img src="${p.img}" alt="${p.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'no-img\\'>👗</div>'">` : '<div class="no-img">👗</div>';
-    return `
-      <div class="product-card ${trackedClass}" data-url="${p.url}">
-        <span class="cat-tag">${p.category}</span>
-        <div class="checkbox-wrap">
-          <input type="checkbox" ${checked} onchange="toggleTrack('${p.url.replace(/'/g, "\\'")}')">
-        </div>
-        <div class="img-wrap">
-          ${imgHtml}
-        </div>
+  grid.innerHTML = filtered.map(p => {
+    const checked = tracking[p.u] ? 'checked' : '';
+    const trackedClass = tracking[p.u] ? 'tracked' : '';
+    const imgHtml = p.i ? `<img src="${p.i}" alt="${p.n}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'no-img\\'>👗</div>'">` : '<div class="no-img">👗</div>';
+    return `<div class="product-card ${trackedClass}" data-url="${p.u}">
+      <span class="cat-tag">${p.c}</span>
+      ${tallaLabel(p)}
+      <div class="checkbox-wrap"><input type="checkbox" ${checked} onchange="toggleTrack('${p.u.replace(/'/g,"\\'")}')"></div>
+      <a href="${p.u}" target="_blank" class="product-link">
+        <div class="img-wrap">${imgHtml}</div>
         <div class="info">
-          <div class="brand">${p.brand}</div>
-          <div class="name">${p.name}</div>
-          <div class="price">${p.price}</div>
+          <div class="brand">${p.b}</div>
+          <div class="name">${p.n}</div>
+          <div class="price">${p.p}</div>
+          ${stockStatus(p)}
         </div>
-        <span class="tracked-badge">✓ Seguido</span>
-      </div>
-    `;
+      </a>
+      <span class="tracked-badge">✓ Seguido</span>
+    </div>`;
   }).join('');
 
   document.getElementById('totalCount').textContent = ALL_PRODUCTS.length;
   document.getElementById('trackingCount').textContent = Object.keys(tracking).length;
+  document.getElementById('withTalla78').textContent = ALL_PRODUCTS.filter(p => p.t78 === 'SI' && p.stk === 'ok').length;
 }
 
 function toggleTrack(url) {
-  if (tracking[url]) {
-    delete tracking[url];
-  } else {
-    tracking[url] = true;
-  }
+  if (tracking[url]) delete tracking[url];
+  else tracking[url] = true;
   saveTracking(tracking);
   render();
-  showToast(tracking[url] ? '✅ Producto añadido a seguimiento' : '❌ Producto eliminado del seguimiento');
 }
 
-function saveSelection() {
-  saveTracking(tracking);
-  showToast('💾 Selección guardada');
-}
-
-function clearSelection() {
-  if (confirm('¿Limpiar toda la selección de seguimiento?')) {
-    tracking = {};
-    saveTracking(tracking);
-    render();
-    showToast('🗑️ Seguimiento limpiado');
-  }
-}
+function saveSelection() { saveTracking(tracking); showToast('💾 Guardado'); }
+function clearSelection() { if (confirm('¿Limpiar?')) { tracking={}; saveTracking(tracking); render(); showToast('🗑️ Limpiado'); }}
 
 function exportSelection() {
-  const tracked = ALL_PRODUCTS.filter(p => tracking[p.url]);
-  if (tracked.length === 0) {
-    showToast('⚠️ No hay productos en seguimiento');
-    return;
-  }
-  const text = tracked.map(p => 
-    `☐ ${p.name} | ${p.price} | ${p.category}\n   ${p.url}`
-  ).join('\n');
-  
-  // Copy to clipboard
-  navigator.clipboard.writeText(text).then(() => {
-    showToast('📋 Lista copiada al portapapeles');
-  }).catch(() => {
-    // Fallback
-    prompt('Copia esta lista:', text);
-  });
+  const tracked = ALL_PRODUCTS.filter(p => tracking[p.u]);
+  if (!tracked.length) { showToast('⚠️ No hay seguimiento'); return; }
+  const text = tracked.map(p => `☐ ${p.n} | ${p.p} | ${p.c}\n   ${p.u}`).join('\n');
+  navigator.clipboard.writeText(text).then(() => showToast('📋 Copiado')).catch(() => prompt('Copia:', text));
 }
 
 function setupFilters() {
   const cats = getCategories();
-  const container = document.getElementById('filters');
-  container.innerHTML = '<button class="active" data-cat="all" onclick="setFilter(\'all\', this)">📋 Todas</button>' +
-    cats.map(c => `<button data-cat="${c}" onclick="setFilter('${c}', this)">${c}</button>`).join('');
+  document.getElementById('filters').innerHTML = '<button class="active" data-cat="all" onclick="setFilter(\'all\',this)">📋 Todas</button>' +
+    cats.map(c => `<button data-cat="${c}" onclick="setFilter('${c}',this)">${c}</button>`).join('');
 }
 
 function setFilter(cat, btn) {
@@ -545,10 +247,8 @@ function setFilter(cat, btn) {
   render();
 }
 
-// Init
 setupFilters();
 render();
 </script>
-
 </body>
 </html>
