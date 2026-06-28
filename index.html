@@ -1138,23 +1138,23 @@
       render();
     }
 
-  /**
-   * Update the active filter and re-render.
+    /**
+     * Update the active filter and re-render.
    * State lives in the `activeCategory` variable — not in the DOM.
    * @param {string} category
    */
   function setFilter(category) {
-    activeCategory = category;
-    filterNav.querySelectorAll('.filter-nav__btn').forEach((btn) => {
-      btn.setAttribute('aria-pressed', String(btn.dataset.cat === category));
-    });
-    render();
-  }
+      activeCategory = category;
+      filterNav.querySelectorAll('.filter-nav__btn').forEach((btn) => {
+        btn.setAttribute('aria-pressed', String(btn.dataset.cat === category));
+      });
+      render();
+    }
 
-  /* ===================================================
-   * EVENT WIRING  (no inline handlers in HTML)
-   * =================================================== */
-  document.getElementById('btnExport').addEventListener('click', handleExport);
+    /* ===================================================
+     * EVENT WIRING  (no inline handlers in HTML)
+     * =================================================== */
+    document.getElementById('btnExport').addEventListener('click', handleExport);
     document.getElementById('btnClear').addEventListener('click', handleClear);
     document.getElementById('btnCart').addEventListener('click', handleCart);
 
@@ -1166,7 +1166,7 @@
     );
 
     /* ===================================================
-   * INIT
+     * INIT
    * =================================================== */
   setupFilters();
   render();
