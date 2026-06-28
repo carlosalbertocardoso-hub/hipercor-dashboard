@@ -902,7 +902,7 @@
     checkbox.checked   = isTracked;
     checkbox.setAttribute('aria-label', `Añadir "${product.name}" al seguimiento`);
     checkbox.addEventListener('change', () => handleToggleTrack(key, card, checkbox));
-    checkLabel.append(checkbox, el('span', { className: 'sr-only' }, `Seguir ${product.name}`));
+    checkLabel.append(checkbox, el('span', {}, '📌'));
     checkboxWrap.append(checkLabel);
 
     // ── Image ──
